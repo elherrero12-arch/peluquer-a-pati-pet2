@@ -644,7 +644,60 @@
     }
     .fc-day-today {
       background-color: rgba(255, 171, 145, 0.1) !important;
-            }
+       }
+      
+      /* FIJAR TAMAÑO DE CUADROS DEL MES */
+.fc-daygrid-day {
+  min-height: 80px !important;
+  height: 80px !important;
+}
+
+.fc-daygrid-day-frame {
+  min-height: 80px !important;
+  height: 80px !important;
+  overflow: hidden !important;
+}
+
+.fc-daygrid-day-events {
+  max-height: 65px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  margin-bottom: 2px !important;
+}
+
+.fc-event {
+  margin: 1px 0 !important;
+  padding: 1px 3px !important;
+  font-size: 10px !important;
+  line-height: 1.1 !important;
+  border-radius: 2px !important;
+}
+
+.fc-event-title {
+  font-size: 10px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Scrollbar para muchos eventos */
+.fc-daygrid-day-events::-webkit-scrollbar {
+  width: 3px;
+}
+
+.fc-daygrid-day-events::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+/* Mantener días del mes alineados */
+.fc-daygrid-body {
+  position: relative !important;
+}
+
+.fc-scrollgrid-sync-table {
+  height: 100% !important;
+        }
     </style>
 </head>
 <body>
@@ -681,7 +734,17 @@
         <button onclick="mostrarPanel('panel-nuevo')">➕ Nuevo Turno</button>
         <button onclick="mostrarPanel('panel-clientes')">👥 Clientes</button>
         <button onclick="mostrarPanel('panel-estadisticas')">📊 Estadísticas</button>
-    </div>
+        <!-- Barra de Backup -->
+<div style="text-align: center; margin: 5px 0; padding: 5px; background: #f5f5f5; border-radius: 5px;">
+  <small style="color: #666;">💾 Backup: </small>
+  <button onclick="exportarBackup()" style="margin: 0 2px; padding: 4px 8px; background: #4caf50; color: white; border: none; border-radius: 3px; font-size: 12px;">
+    📥 Exportar
+  </button>
+  <label style="margin: 0 2px; padding: 4px 8px; background: #2196f3; color: white; border: none; border-radius: 3px; font-size: 12px; cursor: pointer;">
+    📤 Importar
+    <input type="file" accept=".json" onchange="importarBackup(event)" style="display: none;">
+  </label>
+</div>
     
     <!-- Panel: Vista Mensual -->
     <div id="panel-mes" class="panel active">
@@ -2069,7 +2132,7 @@ function importarBackup(event) {
     reader.readAsText(file);
 }
 
-// 8. BOTONES DE BACKUP (añade en tu HTML)
+// 8. FUNCIÓN ORIGINAL DE BOTONES FLOTANTES (LA MANTENEMOS POR SI ACASO)
 function agregarBotonesBackup() {
     const botonExportar = document.createElement('button');
     botonExportar.textContent = '📥 Exportar Backup';
@@ -2133,10 +2196,45 @@ function agregarBotonesBackup() {
     document.body.appendChild(botonImportar);
 }
 
+// 9. ELIMINAR BOTONES FLOTANTES VIEJOS
+function eliminarBotonesViejos() {
+    // Buscar botones flotantes por su estilo o texto
+    const todosLosBotones = document.querySelectorAll('button, label, input');
+    
+    todosLosBotones.forEach(elemento => {
+        const estilo = elemento.style.cssText || '';
+        const texto = elemento.textContent || '';
+        
+        // Si tiene posición fixed y contiene "Backup" o tiene los estilos viejos
+        if ((estilo.includes('position: fixed') && estilo.includes('bottom:')) || 
+            texto.includes('Exportar Backup') || 
+            texto.includes('Importar Backup')) {
+            
+            if (elemento.parentNode) {
+                elemento.parentNode.removeChild(elemento);
+                console.log('Botón viejo eliminado:', texto);
+            }
+        }
+    });
+    
+    // También eliminar el input file si existe
+    const inputFile = document.getElementById('file-input-backup');
+    if (inputFile && inputFile.parentNode) {
+        inputFile.parentNode.removeChild(inputFile);
+    }
+    
+    console.log('Limpieza de botones flotantes completada');
+}
+
+// 10. INICIALIZAR - SOLO ELIMINAR BOTONES VIEJOS
+setTimeout(eliminarBotonesViejos, 1000);
+
+// NO EJECUTAR: agregarBotonesBackup() - porque ya tienes botones en la barra
 // Agregar botones cuando cargue la página
 setTimeout(agregarBotonesBackup, 1000);
 </script>
-</body>
+ </body>
 
 
 </html>
+
