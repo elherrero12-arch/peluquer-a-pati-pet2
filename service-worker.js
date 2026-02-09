@@ -12,9 +12,7 @@ const urlsToCache = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => {
-        return cache.addAll(urlsToCache);
-      })
+      .then(cache => cache.addAll(urlsToCache))
       .then(() => self.skipWaiting())
   );
 });
@@ -24,9 +22,7 @@ self.addEventListener('activate', event => {
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
+          if (cacheName !== CACHE_NAME) return caches.delete(cacheName);
         })
       );
     }).then(() => self.clients.claim())
@@ -37,51 +33,24 @@ self.addEventListener('fetch', event => {
   if (event.request.url.indexOf('http') !== 0) return;
 
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          return response;
-        }
+    caches.match(event.request).then(response => {
+      if (response) return response;
 
-        return fetch(event.request).then(response => {
-          if (!response || response.status !== 200) {
-            return response;
-          }
+      return fetch(event.request).then(response => {
+        if (!response || response.status !== 200) return response;
 
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone);
-          });
-
-          return response;
-        }).catch(() => {
-          if (event.request.mode === 'navigate') {
-            return caches.match('./index.html');
-          }
-          return new Response('Offline', { status: 503 });
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, responseClone);
         });
-      })
+
+        return response;
+      }).catch(() => {
+        if (event.request.mode === 'navigate') {
+          return caches.match('./index.html');
+        }
+        return new Response('Offline', { status: 503 });
+      });
+    })
   );
 });
-
-self.addEventListener('sync', event => {
-  if (event.tag === 'sync-turnos') {
-    event.waitUntil(syncData());
-  }
-});
-
-async function syncData() {
-  try {
-    const cache = await caches.open('turnos-pendientes');
-    const keys = await cache.keys();
-    
-    for (const request of keys) {
-      const response = await cache.match(request);
-      if (response) {
-        console.log('Sincronizando turno pendiente');
-      }
-    }
-  } catch (error) {
-    console.error('Error en sync:', error);
-  }
-    }
