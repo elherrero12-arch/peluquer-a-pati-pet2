@@ -2349,57 +2349,11 @@ function agregarBotonesBackup() {
         cursor: pointer;
         width: 140px;
         text-align: center;
-        display: block;
-    `;
-    
-    botonImportar.id = 'file-input-backup';
-    botonImportar.style.display = 'none';
-    
-    document.body.appendChild(botonExportar);
-    document.body.appendChild(labelImportar);
-    document.body.appendChild(botonImportar);
-}
-
-// 9. ELIMINAR BOTONES FLOTANTES VIEJOS
-function eliminarBotonesViejos() {
-    // Buscar botones flotantes por su estilo o texto
-    const todosLosBotones = document.querySelectorAll('button, label, input');
-    
-    todosLosBotones.forEach(elemento => {
-        const estilo = elemento.style.cssText || '';
-        const texto = elemento.textContent || '';
-        
-        // Si tiene posición fixed y contiene "Backup" o tiene los estilos viejos
-        if ((estilo.includes('position: fixed') && estilo.includes('bottom:')) || 
-            texto.includes('Exportar Backup') || 
-            texto.includes('Importar Backup')) {
-            
-            if (elemento.parentNode) {
-                elemento.parentNode.removeChild(elemento);
-                console.log('Botón viejo eliminado:', texto);
-            }
-        }
-    });
-    
-    // También eliminar el input file si existe
-    const inputFile = document.getElementById('file-input-backup');
-    if (inputFile && inputFile.parentNode) {
-        inputFile.parentNode.removeChild(inputFile);
-    }
-    
-    console.log('Limpieza de botones flotantes completada');
-}
-
-// 10. INICIALIZAR - SOLO ELIMINAR BOTONES VIEJOS
-setTimeout(eliminarBotonesViejos, 1000);
-
-// NO EJECUTAR: agregarBotonesBackup() - porque ya tienes botones en la barra
-// Agregar botones cuando cargue la página
-setTimeout(agregarBotonesBackup, 1000);
 </script>
- </body>
-
+      
+</body>
 
 </html>
+
 
 
