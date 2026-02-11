@@ -763,7 +763,23 @@
   border-radius: 3px;
   font-size: 12px;
   cursor: pointer;
-      }
+}
+
+.boton-refresh {
+  margin: 0 2px;
+  padding: 4px 8px;
+  background: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.boton-refresh:hover {
+  background: #f57c00;
+}      
+      
     </style>
 </head>
 <body>
@@ -807,6 +823,9 @@
     📤 Importar
     <input type="file" accept=".json" onchange="importarBackup(event)" style="display: none;">
   </label>
+  <button class="boton-refresh" onclick="recargarAppConCacheClean()" title="Actualizar código (no borra datos)">
+    🔄 Código
+  </button>
         </div>
     
     <!-- Panel: Vista Mensual -->
@@ -1722,7 +1741,7 @@
             }
         }
 
-        // ====================
+// ====================
 // SISTEMA DE BACKUP MEJORADO
 // ====================
 const BACKUP_KEY = 'patipet_turnos_backup_v1';
@@ -2296,6 +2315,35 @@ function importarBackup(event) {
     reader.readAsText(file);
 }
 
+// ====================
+// RECARGAR APP - ACTUALIZAR CÓDIGO SIN PERDER DATOS
+// ====================
+function recargarAppConCacheClean() {
+    if (!confirm('¿Actualizar la aplicación?\n\nEsto forzará la carga del código más reciente desde el servidor.\n\n✅ Tus datos SEGUIRÁN intactos.\n🔄 Se recargará la página.')) {
+        return;
+    }
+    
+    // 1. Forzar que el Service Worker use la versión más nueva
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            registrations.forEach(function(registration) {
+                registration.update();
+                console.log('Service Worker actualizado');
+            });
+        });
+    }
+    
+    // 2. Forzar recarga del navegador SIN caché (solo código, no datos)
+    setTimeout(function() {
+        // Método 1: Usar location.reload con true (fuerza caché)
+        window.location.reload(true);
+        
+        // Método alternativo: Redirigir con timestamp
+        // window.location.href = window.location.origin + window.location.pathname + '?v=' + Date.now();
+    }, 1000);
+    
+    alert('🔄 Recargando aplicación... Tus datos están seguros.');
+    }
 // 8. FUNCIÓN ORIGINAL DE BOTONES FLOTANTES (LA MANTENEMOS POR SI ACASO)
 function agregarBotonesBackup() {
     const botonExportar = document.createElement('button');
@@ -2353,6 +2401,7 @@ function agregarBotonesBackup() {
   </body>
 
 </html>
+
 
 
 
