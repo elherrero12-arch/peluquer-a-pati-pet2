@@ -4,1831 +4,1349 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#ffab91">
-  <title>Peluquería Canina Pati-pet</title>
+  <title>Patipet - Agenda Profesional</title>
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./icon-192.png">
   
-  <!-- FullCalendar CSS -->
-  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+  <style>
+    /* ===== RESET Y BASE ===== */
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
     
-    <style>
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-        }
-        
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #f9f7ff 0%, #e3f2fd 100%);
-            color: #333;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        /* Encabezado mejorado */
-        .header-container {
-            text-align: center;
-            margin: 0 auto 30px;
-            padding: 20px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.1);
-            max-width: 800px;
-            border: 2px solid #ffccd5;
-        }
-        
-        .paws-row {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 10px 0;
-            font-size: 20px;
-        }
-        
-        .main-title {
-            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
-            color: #5d4037;
-            font-size: 1.8rem;
-            margin: 10px 0;
-        }
-        
-        .subtitle {
-            color: #8d6e63;
-            font-size: 1.1rem;
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-        
-        /* Indicador offline */
-        .offline-indicator {
-            display: none;
-            background: #ff7043;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        
-        .offline-indicator.show {
-            display: block;
-        }
-        
-        /* Navegacion */
-        .nav { 
-            display: flex; 
-            background: #5d4037;
-            margin-bottom: 25px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(93, 64, 55, 0.2);
-        }
-        
-        .nav button { 
-            flex: 1; 
-            padding: 18px 10px; 
-            border: none; 
-            background: #8d6e63; 
-            color: white; 
-            cursor: pointer; 
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-        
-        .nav button:hover { 
-            background: #a1887f; 
-            transform: translateY(-2px);
-        }
-        
-        .nav button.active { 
-            background: #ffab91; 
-            color: #5d4037;
-            box-shadow: inset 0 -3px 0 #ff8a65;
-        }
-        
-        /* Paneles */
-        .panel { 
-            display: none; 
-            background: white; 
-            padding: 25px; 
-            border-radius: 15px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            margin-bottom: 30px;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .panel.active { 
-            display: block; 
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Calendario Mensual */
-        .mes-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #ffccd5;
-        }
-        
-        .mes-header h2 {
-            color: #5d4037;
-            font-size: 1.8rem;
-        }
-        
-        .dias-semana { 
-            display: grid; 
-            grid-template-columns: repeat(7, 1fr); 
-            text-align: center; 
-            font-weight: bold; 
-            margin-bottom: 15px;
-            color: #8d6e63;
-            padding: 10px 0;
-            background: #f5f5f5;
-            border-radius: 8px;
-        }
-        
-        .dias-mes { 
-            display: grid; 
-            grid-template-columns: repeat(7, 1fr); 
-            gap: 8px; 
-        }
-        
-        .dia { 
-            padding: 12px 5px; 
-            border: 1px solid #e0e0e0; 
-            text-align: center; 
-            cursor: pointer; 
-            min-height: 70px;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            position: relative;
-            background: #fafafa;
-        }
-        
-        .dia:hover { 
-            background: #e3f2fd; 
-            transform: scale(1.03);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-        }
-        
-        .dia.hoy { 
-            background: #ffe0b2; 
-            border-color: #ffab91;
-            font-weight: bold;
-        }
-        
-        .dia.pasado {
-            background: #f5f5f5;
-            color: #9e9e9e;
-            cursor: not-allowed;
-        }
-        
-        .dia.con-turno { 
-            background: #ffebee; 
-            position: relative; 
-        }
-        
-        .dia.con-turno::after { 
-            content: "🐾"; 
-            font-size: 12px;
-            position: absolute; 
-            top: 5px; 
-            right: 5px; 
-        }
-        
-        .turno-count {
-            font-size: 10px;
-            color: #d32f2f;
-            margin-top: 5px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 10px;
-            padding: 1px 5px;
-            align-self: center;
-        }
-        
-        /* Formularios */
-        .form-group { 
-            margin-bottom: 20px; 
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-        
-        label { 
-            display: block; 
-            margin-bottom: 8px; 
-            font-weight: bold;
-            color: #5d4037;
-        }
-        
-        input, select, textarea { 
-            width: 100%; 
-            padding: 14px; 
-            border: 1px solid #ccc; 
-            border-radius: 8px; 
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            border-color: #ffab91;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(255, 171, 145, 0.2);
-        }
-        
-        .btn { 
-            background: linear-gradient(to right, #ffab91, #ff8a65); 
-            color: white; 
-            padding: 15px 25px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(255, 138, 101, 0.2);
-        }
-        
-        .btn:hover { 
-            background: linear-gradient(to right, #ff8a65, #ff7043); 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(255, 138, 101, 0.3);
-        }
-        
-        .btn:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        /* Listas */
-        .lista-turnos { 
-            margin-top: 20px; 
-        }
-        
-        .turno-item { 
-            border-left: 5px solid #ffab91; 
-            padding: 20px; 
-            margin-bottom: 15px; 
-            background: #f9f9f9;
-            border-radius: 0 10px 10px 0;
-            transition: all 0.3s ease;
-        }
-        
-        .turno-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-        
-        .turno-item.hoy { 
-            border-left-color: #ff7043; 
-            background: #fff3e0; 
-        }
-        
-        .tag-pago { 
-            display: inline-block; 
-            padding: 5px 12px; 
-            border-radius: 20px; 
-            font-size: 12px; 
-            margin-left: 10px;
-            font-weight: bold;
-        }
-        
-        .mp { 
-            background: #00a650; 
-            color: white; 
-        }
-        
-        .nx { 
-            background: #5c6bc0; 
-            color: white; 
-        }
-        
-        .efect { 
-            background: #ff9800; 
-            color: white; 
-        }
-        
-        /* Botones de acción */
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .action-buttons button {
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex: 1;
-            min-width: 120px;
-            justify-content: center;
-        }
-        
-        .edit-btn {
-            background: #bbdefb;
-            color: #1565c0;
-        }
-        
-        .delete-btn {
-            background: #ffcdd2;
-            color: #c62828;
-        }
-        
-        .whatsapp-btn {
-            background: #25D366;
-            color: white;
-        }
-        
-        .share-btn {
-            background: #FF9800;
-            color: white;
-        }
-        
-        .edit-btn:hover {
-            background: #90caf9;
-        }
-        
-        .delete-btn:hover {
-            background: #ef9a9a;
-        }
-        
-        .whatsapp-btn:hover {
-            background: #128C7E;
-        }
-        
-        .share-btn:hover {
-            background: #F57C00;
-        }
-        
-        /* Estadisticas */
-        .stats { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-            gap: 20px; 
-            margin: 25px 0; 
-        }
-        
-        .stat-box { 
-            background: white; 
-            padding: 20px; 
-            border-radius: 10px; 
-            text-align: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            border-top: 5px solid #ffab91;
-            transition: all 0.3s ease;
-        }
-        
-        .stat-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-        }
-        
-        .stat-box h3 { 
-            margin: 0 0 15px 0; 
-            color: #8d6e63;
-            font-size: 1rem;
-        }
-        
-        .stat-box .valor { 
-            font-size: 28px; 
-            font-weight: bold; 
-            color: #5d4037; 
-        }
-        
-        /* Header responsive para vista día */
-        .day-header-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .day-header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .day-header-bottom {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .day-header-bottom .btn {
-            flex: 1;
-            min-width: 150px;
-        }
-        
-        /* Utilidades */
-        .oculto { 
-            display: none; 
-        }
-        
-        .datalist-items { 
-            max-height: 200px; 
-            overflow-y: auto; 
-        }
-        
-        .mes-header-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .mes-header-buttons button {
-            padding: 10px 18px;
-            background: #ffccd5;
-            color: #5d4037;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        
-        .mes-header-buttons button:hover {
-            background: #ffab91;
-        }
-        
-        .telefono-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 8px;
-            color: #5d4037;
-        }
-        
-        .notas-info {
-            margin-top: 10px;
-            padding: 10px;
-            background: #f5f5f5;
-            border-radius: 5px;
-            border-left: 3px solid #ffab91;
-        }
-        
-        /* Instalar App Banner */
-        .install-banner {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            gap: 15px;
-            max-width: 90%;
-        }
-        
-        .install-banner.show {
-            display: flex;
-            animation: slideUp 0.5s ease;
-        }
-        
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
-        
-        .install-btn {
-            background: #ff7043;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        .close-install {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #666;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav {
-                flex-wrap: wrap;
-            }
-            
-            .nav button {
-                flex: 1 0 33%;
-                padding: 15px 5px;
-                font-size: 13px;
-            }
-            
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            
-            .day-header-top {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .day-header-bottom {
-                width: 100%;
-            }
-            
-            .day-header-bottom .btn {
-                min-width: 100%;
-            }
-            
-            .mes-header {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .mes-header-buttons {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .action-buttons button {
-                min-width: calc(50% - 5px);
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .stats {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav button {
-                flex: 1 0 50%;
-            }
-            
-            .action-buttons button {
-                min-width: 100%;
-            }
-            
-            .panel {
-                padding: 20px 15px;
-            }
-            
-            .main-title {
-                font-size: 1.5rem;
-            }
-            
-            .subtitle {
-                font-size: 1rem;
-            }
-            
-            .install-banner {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-        
-        /* Animaciones */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        
-        .shake {
-            animation: shake 0.5s ease-in-out;
-        }
-            .fc-event {
-      border-left: 4px solid;
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif; 
+      background: linear-gradient(135deg, #f9f7ff 0%, #e3f2fd 100%);
+      color: #333;
+      min-height: 100vh;
+      padding: 15px;
+    }
+    
+    /* ===== ENCABEZADO ===== */
+    .header-container {
+      text-align: center;
+      margin: 0 auto 20px;
+      padding: 20px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 102, 204, 0.1);
+      max-width: 100%;
+      border: 2px solid #ffccd5;
+    }
+    
+    .paws-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 8px 0;
+      font-size: 20px;
+    }
+    
+    .main-title {
+      font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+      color: #5d4037;
+      font-size: 1.8rem;
+      margin: 8px 0;
+    }
+    
+    .subtitle {
+      color: #8d6e63;
+      font-size: 1rem;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+    
+    /* ===== NAVEGACIÓN ===== */
+    .nav-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .nav { 
+      display: flex; 
+      background: #5d4037;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(93, 64, 55, 0.2);
+    }
+    
+    .nav button { 
+      flex: 1; 
+      padding: 16px 8px; 
+      border: none; 
+      background: #8d6e63; 
+      color: white; 
+      cursor: pointer; 
+      font-weight: bold;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav button:hover { 
+      background: #a1887f; 
+    }
+    
+    .nav button.active { 
+      background: #ffab91; 
+      color: #5d4037;
+      box-shadow: inset 0 -3px 0 #ff8a65;
+    }
+    
+    /* ===== BARRA DE BACKUP ===== */
+    .barra-backup {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      background: #f5f5f5;
+      border-radius: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .barra-backup small {
+      color: #666;
+      font-size: 12px;
+      margin-right: 5px;
+    }
+    
+    .boton-backup {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      font-size: 12px;
       cursor: pointer;
+      color: white;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
-    .fc-event:hover {
-      opacity: 0.9;
+    
+    .boton-exportar { background: #4caf50; }
+    .boton-importar { background: #2196f3; }
+    .boton-refresh { background: #ff9800; }
+    
+    .boton-exportar:hover { background: #45a049; }
+    .boton-importar:hover { background: #0b7dda; }
+    .boton-refresh:hover { background: #f57c00; }
+    
+    /* ===== PANELES PRINCIPALES ===== */
+    .panel { 
+      display: none; 
+      background: white; 
+      padding: 20px; 
+      border-radius: 15px; 
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+      border: 1px solid #e0e0e0;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
     }
-    .fc-day-today {
-      background-color: rgba(255, 171, 145, 0.1) !important;
-       }
+    
+    .panel.active { 
+      display: block; 
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* ===== CALENDARIO MENSUAL ===== */
+    .mes-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #ffccd5;
+    }
+    
+    .mes-header h2 {
+      color: #5d4037;
+      font-size: 1.5rem;
+    }
+    
+    .mes-header-buttons {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .mes-header-buttons button {
+      padding: 8px 15px;
+      background: #ffccd5;
+      color: #5d4037;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    
+    .mes-header-buttons button:hover {
+      background: #ffab91;
+    }
+    
+    .dias-semana { 
+      display: grid; 
+      grid-template-columns: repeat(7, 1fr); 
+      text-align: center; 
+      font-weight: bold; 
+      margin-bottom: 10px;
+      color: #8d6e63;
+      padding: 10px 0;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+    
+    .dias-mes { 
+      display: grid; 
+      grid-template-columns: repeat(7, 1fr); 
+      gap: 6px; 
+      min-height: 500px;
+    }
+    
+    .dia { 
+      padding: 8px 4px; 
+      border: 1px solid #e0e0e0; 
+      text-align: center; 
+      cursor: pointer; 
+      height: 85px;
+      max-height: 85px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    
+    .dia:hover { 
+      background: #e3f2fd; 
+      transform: scale(1.02);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    
+    .dia.hoy { 
+      background: #ffe0b2; 
+      border-color: #ffab91;
+      font-weight: bold;
+    }
+    
+    .dia.pasado {
+      background: #f5f5f5;
+      color: #9e9e9e;
+      cursor: not-allowed;
+    }
+    
+    .dia.con-turno { 
+      background: #ffebee; 
+    }
+    
+    .dia-numero {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: #5d4037;
+    }
+    
+    .turnos-container {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 55px;
+    }
+    
+    .turno-en-casillero {
+      font-size: 9px;
+      line-height: 1.2;
+      margin: 2px 0;
+      padding: 2px 4px;
+      background: rgba(255, 171, 145, 0.15);
+      border-radius: 3px;
+      border-left: 2px solid #ffab91;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .turno-count {
+      position: absolute;
+      bottom: 3px;
+      right: 3px;
+      font-size: 10px;
+      color: #d32f2f;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 1px 6px;
+      font-weight: bold;
+    }
+    
+    /* ===== VISTA SEMANAL ===== */
+    #calendario-semana {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    
+    .dia-semana {
+      border: 1px solid #ffccd5;
+      padding: 15px;
+      border-radius: 10px;
+      background: white;
+    }
+    
+    .dia-semana.hoy {
+      background: #fff3e0;
+      border-color: #ffab91;
+    }
+    
+    .dia-semana.pasado {
+      background: #f5f5f5;
+      border-color: #ddd;
+    }
+    
+    /* ===== VISTA DIARIA ===== */
+    .day-header-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .day-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .day-header-bottom {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    /* ===== FORMULARIOS ===== */
+    .form-group { 
+      margin-bottom: 18px; 
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .form-row .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    
+    label { 
+      display: block; 
+      margin-bottom: 6px; 
+      font-weight: bold;
+      color: #5d4037;
+      font-size: 14px;
+    }
+    
+    input, select, textarea { 
+      width: 100%; 
+      padding: 12px; 
+      border: 1px solid #ccc; 
+      border-radius: 8px; 
+      font-size: 15px;
+      transition: border 0.3s;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      border-color: #ffab91;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 171, 145, 0.2);
+    }
+    
+    .btn { 
+      background: linear-gradient(to right, #ffab91, #ff8a65); 
+      color: white; 
+      padding: 14px 22px; 
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-weight: bold;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(255, 138, 101, 0.2);
+    }
+    
+    .btn:hover { 
+      background: linear-gradient(to right, #ff8a65, #ff7043); 
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(255, 138, 101, 0.3);
+    }
+    
+    /* ===== LISTA DE TURNOS ===== */
+    .lista-turnos { 
+      margin-top: 20px; 
+    }
+    
+    .turno-item { 
+      border-left: 5px solid #ffab91; 
+      padding: 18px; 
+      margin-bottom: 15px; 
+      background: #f9f9f9;
+      border-radius: 0 10px 10px 0;
+      transition: all 0.3s ease;
+    }
+    
+    .turno-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    .turno-item.hoy { 
+      border-left-color: #ff7043; 
+      background: #fff3e0; 
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .action-buttons button {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      min-width: 100px;
+      justify-content: center;
+      font-size: 13px;
+    }
+    
+    .edit-btn { background: #bbdefb; color: #1565c0; }
+    .delete-btn { background: #ffcdd2; color: #c62828; }
+    .whatsapp-btn { background: #25D366; color: white; }
+    .share-btn { background: #FF9800; color: white; }
+    
+    .edit-btn:hover { background: #90caf9; }
+    .delete-btn:hover { background: #ef9a9a; }
+    .whatsapp-btn:hover { background: #128C7E; }
+    .share-btn:hover { background: #F57C00; }
+    
+    /* ===== ESTADÍSTICAS ===== */
+    .stats { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+      gap: 15px; 
+      margin: 20px 0; 
+    }
+    
+    .stat-box { 
+      background: white; 
+      padding: 18px; 
+      border-radius: 10px; 
+      text-align: center; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      border-top: 5px solid #ffab91;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+    
+    .stat-box h3 { 
+      margin: 0 0 12px 0; 
+      color: #8d6e63;
+      font-size: 14px;
+    }
+    
+    .stat-box .valor { 
+      font-size: 24px; 
+      font-weight: bold; 
+      color: #5d4037; 
+    }
+    
+    /* ===== OFFLINE Y INSTALACIÓN ===== */
+    .offline-indicator {
+      display: none;
+      background: #ff7043;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    
+    .offline-indicator.show {
+      display: block;
+    }
+    
+    .install-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      gap: 15px;
+      max-width: 90%;
+    }
+    
+    .install-banner.show {
+      display: flex;
+      animation: slideUp 0.5s ease;
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .nav {
+        flex-wrap: wrap;
+      }
       
-      /* FIJAR TAMAÑO DE CUADROS DEL MES */
-.fc-daygrid-day {
-  min-height: 80px !important;
-  height: 80px !important;
-}
-
-.fc-daygrid-day-frame {
-  min-height: 80px !important;
-  height: 80px !important;
-  overflow: hidden !important;
-}
-
-.fc-daygrid-day-events {
-  max-height: 65px !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  margin-bottom: 2px !important;
-}
-
-.fc-event {
-  margin: 1px 0 !important;
-  padding: 1px 3px !important;
-  font-size: 10px !important;
-  line-height: 1.1 !important;
-  border-radius: 2px !important;
-}
-
-.fc-event-title {
-  font-size: 10px !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-}
-
-/* Scrollbar para muchos eventos */
-.fc-daygrid-day-events::-webkit-scrollbar {
-  width: 3px;
-}
-
-.fc-daygrid-day-events::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 3px;
-}
-
-/* Mantener días del mes alineados */
-.fc-daygrid-body {
-  position: relative !important;
-}
-
-.fc-scrollgrid-sync-table {
-  height: 100% !important;
-        }
-      /* ===== ARREGLAR CALENDARIO PROPIO ===== */
-.dias-mes {
-  grid-auto-rows: 90px !important;
-}
-
-.dia {
-  min-height: 90px !important;
-  max-height: 90px !important;
-  overflow: hidden !important;
-}
-
-.dia .turnos-container {
-  max-height: 60px !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-}
-
-.turno-en-casillero {
-  font-size: 9px !important;
-  line-height: 1.1 !important;
-  margin: 1px 0 !important;
-  padding: 1px 3px !important;
-  background: rgba(255, 171, 145, 0.15) !important;
-  border-radius: 2px !important;
-  border-left: 2px solid #ffab91 !important;
-}
-
-.turno-count {
-  position: absolute !important;
-  bottom: 3px !important;
-  right: 3px !important;
-  font-size: 9px !important;
-  padding: 1px 4px !important;
-  background: rgba(255, 171, 145, 0.3) !important;
-}
-
-/* ===== BOTONES BACKUP EN BARRA ===== */
-.barra-backup {
-  text-align: center;
-  margin: 5px 0;
-  padding: 5px;
-  background: #f5f5f5;
-  border-radius: 5px;
-}
-
-.boton-exportar {
-  margin: 0 2px;
-  padding: 4px 8px;
-  background: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.boton-importar {
-  margin: 0 2px;
-  padding: 4px 8px;
-  background: #2196f3;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.boton-refresh {
-  margin: 0 2px;
-  padding: 4px 8px;
-  background: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.boton-refresh:hover {
-  background: #f57c00;
-} 
-
-/* ===== ARREGLAR EXPANSIÓN VERTICAL DE CUADROS MES ===== */
-.dias-mes {
-  grid-auto-rows: 90px !important; /* ALTURA FIJA POR FILA */
-}
-
-.dia {
-  height: 90px !important; /* ALTURA FIJA */
-  max-height: 90px !important;
-  overflow: hidden !important;
-  position: relative !important;
-}
-
-/* Contenedor de turnos con scroll VERTICAL */
-.dia .turnos-container {
-  height: 60px !important; /* ALTURA FIJA para turnos */
-  max-height: 60px !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  margin-top: 5px !important;
-}
-
-/* Cada turno individual - más compacto */
-.turno-en-casillero {
-  height: 20px !important;
-  max-height: 20px !important;
-  margin: 1px 0 !important;
-  padding: 1px 3px !important;
-  font-size: 8px !important;
-  line-height: 1 !important;
-}
-
-/* Número del día más pequeño */
-.dia > div:first-child {
-  font-size: 14px !important;
-  margin-bottom: 2px !important;
-}
-
-/* Contador de turnos en esquina */
-.turno-count {
-  position: absolute !important;
-  bottom: 2px !important;
-  right: 2px !important;
-  font-size: 9px !important;
-  padding: 1px 4px !important;
-  background: rgba(255, 171, 145, 0.3) !important;
-  border-radius: 3px !important;
-}
-
-/* Asegurar que grid mantenga estructura */
-#calendario-mes {
-  min-height: 600px !important; /* ALTURA MÍNIMA PARA CALENDARIO */
-}   
-
-/* ===== IGUALAR ANCHO DE TODOS LOS PANELES ===== */
-.panel {
-  width: calc(100% - 40px) !important; /* 40px = 20px padding izquierda + 20px derecha */
-  max-width: calc(100% - 40px) !important;
-  margin-left: 20px !important;
-  margin-right: 20px !important;
-  box-sizing: border-box !important;
-}
-
-/* Asegurar que el body no tenga padding extra */
-body {
-  padding: 20px !important;
-  margin: 0 !important;
-  width: 100% !important;
-  overflow-x: hidden !important;
-}
-
-/* Contenedor principal */
-.header-container, .nav {
-  width: calc(100% - 40px) !important;
-  margin-left: 20px !important;
-  margin-right: 20px !important;
-  box-sizing: border-box !important;
-}      
+      .nav button {
+        flex: 1 0 33%;
+        padding: 14px 5px;
+        font-size: 12px;
+      }
       
-    </style>
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+      
+      .mes-header {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .mes-header-buttons {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .dias-mes {
+        gap: 4px;
+      }
+      
+      .dia {
+        height: 75px;
+        max-height: 75px;
+        padding: 6px 3px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+      
+      .nav button {
+        flex: 1 0 50%;
+        font-size: 11px;
+      }
+      
+      .action-buttons button {
+        min-width: calc(50% - 4px);
+      }
+      
+      .panel {
+        padding: 15px;
+      }
+      
+      .main-title {
+        font-size: 1.5rem;
+      }
+      
+      .subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .install-banner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Indicador de conexión -->
-    <div id="offlineIndicator" class="offline-indicator">
-        ⚠️ Modo offline - Los datos se guardarán localmente
+  <!-- Indicador de conexión -->
+  <div id="offlineIndicator" class="offline-indicator">
+    ⚠️ Modo offline - Los datos se guardarán localmente
+  </div>
+  
+  <!-- Banner para instalar app -->
+  <div id="installBanner" class="install-banner">
+    <span>📱 Instalar Patipet App para usar offline</span>
+    <button id="installBtn" class="btn">Instalar</button>
+    <button id="closeInstall" class="btn" style="background: #666;">✕</button>
+  </div>
+  
+  <!-- Encabezado -->
+  <div class="header-container">
+    <div class="paws-row">
+      <span>🐾</span><span>🐾</span><span>🐾</span>
     </div>
-    
-    <!-- Banner para instalar app -->
-    <div id="installBanner" class="install-banner">
-        <span>📱 Instalar Pati-pet App para usar offline</span>
-        <button id="installBtn" class="install-btn">Instalar</button>
-        <button id="closeInstall" class="close-install">✕</button>
+    <h1 class="main-title">Patipet</h1>
+    <div class="paws-row">
+      <span>🐾</span><span>🐾</span><span>🐾</span>
     </div>
-    
-    <!-- Encabezado mejorado - CAMBIO 1: Nombre cambiado a "Patipet" -->
-    <div class="header-container">
-        <div class="paws-row">
-            <span>🐾</span><span>🐾</span><span>🐾</span>
-        </div>
-        <h1 class="main-title">Patipet</h1>
-        <div class="paws-row">
-            <span>🐾</span><span>🐾</span><span>🐾</span>
-        </div>
-        <p class="subtitle">Agenda Profesional para Mascotas</p>
-        <p style="font-size: 0.9rem; color: #9e9e9e; margin-top: 5px;">💾 Datos guardados localmente | 📱 Usa offline</p>
-    </div>
-    
-    <!-- Navegacion -->
+    <p class="subtitle">Agenda Profesional para Mascotas</p>
+    <p style="font-size: 0.85rem; color: #9e9e9e; margin-top: 5px;">
+      💾 Datos guardados localmente | 📱 Usa offline
+    </p>
+  </div>
+  
+  <!-- Navegación -->
+  <div class="nav-container">
     <div class="nav">
-        <button onclick="mostrarPanel('panel-mes')" class="active">📅 Mes</button>
-        <button onclick="mostrarPanel('panel-semana')">📋 Semana</button>
-        <button onclick="mostrarPanel('panel-dia')">🐕 Día</button>
-        <button onclick="mostrarPanel('panel-nuevo')">➕ Nuevo Turno</button>
-        <button onclick="mostrarPanel('panel-clientes')">👥 Clientes</button>
-        <button onclick="mostrarPanel('panel-estadisticas')">📊 Estadísticas</button>
-        <div class="barra-backup">
-  <small style="color: #666; white-space: nowrap;">💾 Backup: </small>
-  <button class="boton-exportar" onclick="exportarBackup()">📥 Exportar</button>
-  <label class="boton-importar" style="display: inline-block;">
-    📤 Importar
-    <input type="file" accept=".json" onchange="importarBackup(event)" style="display: none;">
-  </label>
-  <button class="boton-refresh" onclick="recargarAppConCacheClean()" title="Actualizar código">🔄 Código</button>
-</div>
-    
-    <!-- Panel: Vista Mensual -->
-    <div id="panel-mes" class="panel active">
-        <div class="mes-header">
-            <h2 id="mes-actual">Enero 2025</h2>
-            <div class="mes-header-buttons">
-                <button onclick="cambiarMes(-1)">← Anterior</button>
-                <button onclick="cambiarMes(0)">Hoy</button>
-                <button onclick="cambiarMes(1)">Siguiente →</button>
-            </div>
-        </div>
-        <div class="dias-semana">
-            <div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div><div>Dom</div>
-        </div>
-        <div id="calendario-mes" class="dias-mes"></div>
+      <button onclick="mostrarPanel('panel-mes')" class="active">📅 Mes</button>
+      <button onclick="mostrarPanel('panel-semana')">📋 Semana</button>
+      <button onclick="mostrarPanel('panel-dia')">🐕 Día</button>
+      <button onclick="mostrarPanel('panel-nuevo')">➕ Nuevo</button>
+      <button onclick="mostrarPanel('panel-clientes')">👥 Clientes</button>
+      <button onclick="mostrarPanel('panel-estadisticas')">📊 Estadísticas</button>
     </div>
     
-    <!-- Panel: Vista Semanal -->
-    <div id="panel-semana" class="panel">
-        <div class="mes-header">
-            <h2 id="semana-actual">Semana 5, 2025</h2>
-            <div class="mes-header-buttons">
-                <button onclick="cambiarSemana(-1)">← Anterior</button>
-                <button onclick="cambiarSemana(0)">Esta Semana</button>
-                <button onclick="cambiarSemana(1)">Siguiente →</button>
-            </div>
-        </div>
-        <div id="calendario-semana"></div>
+    <!-- Barra de Backup -->
+    <div class="barra-backup">
+      <small>💾 Backup:</small>
+      <button class="boton-backup boton-exportar" onclick="exportarBackup()">
+        📥 Exportar
+      </button>
+      <label class="boton-backup boton-importar">
+        📤 Importar
+        <input type="file" accept=".json" onchange="importarBackup(event)" style="display: none;">
+      </label>
+      <button class="boton-backup boton-refresh" onclick="recargarAppConCacheClean()" title="Actualizar código">
+        🔄 Actualizar App
+      </button>
+    </div>
+  </div>
+  
+  <!-- Panel: Vista Mensual -->
+  <div id="panel-mes" class="panel active">
+    <div class="mes-header">
+      <h2 id="mes-actual">Enero 2025</h2>
+      <div class="mes-header-buttons">
+        <button onclick="cambiarMes(-1)">← Anterior</button>
+        <button onclick="cambiarMes(0)">Hoy</button>
+        <button onclick="cambiarMes(1)">Siguiente →</button>
+      </div>
+    </div>
+    <div class="dias-semana">
+      <div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div><div>Dom</div>
+    </div>
+    <div id="calendario-mes" class="dias-mes"></div>
+  </div>
+  
+  <!-- Panel: Vista Semanal -->
+  <div id="panel-semana" class="panel">
+    <div class="mes-header">
+      <h2 id="semana-actual">Semana 5, 2025</h2>
+      <div class="mes-header-buttons">
+        <button onclick="cambiarSemana(-1)">← Anterior</button>
+        <button onclick="cambiarSemana(0)">Esta Semana</button>
+        <button onclick="cambiarSemana(1)">Siguiente →</button>
+      </div>
+    </div>
+    <div id="calendario-semana"></div>
+  </div>
+  
+  <!-- Panel: Vista Diaria -->
+  <div id="panel-dia" class="panel">
+    <div class="day-header-container">
+      <div class="day-header-top">
+        <h3>Vista Diaria</h3>
+        <input type="date" id="fecha-dia" onchange="cargarDia()" style="min-width: 160px;">
+      </div>
+      <div class="day-header-bottom">
+        <button onclick="imprimirDia()" class="btn">🖨️ Imprimir Día</button>
+        <button onclick="compartirTurnosDia()" class="btn">📤 Compartir Turnos</button>
+      </div>
+    </div>
+    <div id="lista-dia" class="lista-turnos"></div>
+  </div>
+  
+  <!-- Panel: Nuevo Turno -->
+  <div id="panel-nuevo" class="panel">
+    <h2>➕ Nuevo Turno</h2>
+    <div class="form-group">
+      <label>🐶 Cliente/Perrito:</label>
+      <input list="lista-clientes" id="cliente" placeholder="Escribe nombre o selecciona">
+      <datalist id="lista-clientes"></datalist>
+      <button onclick="guardarCliente()" class="btn" style="margin-top: 10px; padding: 10px 15px;">
+        💾 Guardar Nuevo Cliente
+      </button>
     </div>
     
-    <!-- Panel: Vista Diaria - MEJORADO -->
-    <div id="panel-dia" class="panel">
-        <div class="day-header-container">
-            <div class="day-header-top">
-                <h3>Vista Diaria</h3>
-                <input type="date" id="fecha-dia" onchange="cargarDia()" style="min-width: 180px;">
-            </div>
-            <div class="day-header-bottom">
-                <button onclick="imprimirDia()" class="btn">🖨️ Imprimir Día</button>
-                <button onclick="exportarHistorial()" class="btn">💾 Exportar Historial</button>
-                <button onclick="compartirTurnosDia()" class="btn">📤 Compartir Turnos</button>
-            </div>
-        </div>
-        <div id="lista-dia" class="lista-turnos"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>📞 Teléfono:</label>
+        <input type="tel" id="telefono" placeholder="Ej: 11 1234-5678">
+      </div>
+      <div class="form-group">
+        <label>📅 Fecha:</label>
+        <input type="date" id="fecha" min="">
+      </div>
+      <div class="form-group">
+        <label>⏰ Hora:</label>
+        <select id="hora">
+          <option value="08:00">08:00</option>
+          <option value="08:30">08:30</option>
+          <option value="09:00">09:00</option>
+          <option value="09:30">09:30</option>
+          <option value="10:00">10:00</option>
+          <option value="10:30">10:30</option>
+          <option value="11:00">11:00</option>
+          <option value="11:30">11:30</option>
+          <option value="12:00">12:00</option>
+          <option value="12:30">12:30</option>
+          <option value="13:00">13:00</option>
+          <option value="13:30">13:30</option>
+          <option value="14:00">14:00</option>
+          <option value="14:30">14:30</option>
+          <option value="15:00">15:00</option>
+          <option value="15:30">15:30</option>
+          <option value="16:00">16:00</option>
+          <option value="16:30">16:30</option>
+          <option value="17:00">17:00</option>
+          <option value="17:30">17:30</option>
+          <option value="18:00">18:00</option>
+          <option value="18:30">18:30</option>
+          <option value="19:00">19:00</option>
+        </select>
+      </div>
     </div>
     
-    <!-- Panel: Nuevo Turno - CON TELÉFONO - CAMBIO 2: Separar fecha y hora -->
-    <div id="panel-nuevo" class="panel">
-        <h2>➕ Nuevo Turno</h2>
-        <div class="form-group">
-            <label>🐶 Cliente/Perrito:</label>
-            <input list="lista-clientes" id="cliente" placeholder="Escribe nombre o selecciona">
-            <datalist id="lista-clientes"></datalist>
-            <button onclick="guardarCliente()" class="btn" style="margin-top: 10px; padding: 10px 15px;">💾 Guardar Nuevo Cliente</button>
-        </div>
-        
-        <div class="form-row">
-            <div class="form-group">
-                <label>📞 Teléfono:</label>
-                <input type="tel" id="telefono" placeholder="Ej: 11 1234-5678">
-            </div>
-            <div class="form-group">
-                <label>📅 Fecha:</label>
-                <input type="date" id="fecha" min="" style="padding: 12px;">
-            </div>
-            <div class="form-group">
-                <label>⏰ Hora:</label>
-                <select id="hora" style="padding: 14px;">
-                    <option value="08:00">08:00</option>
-                    <option value="08:30">08:30</option>
-                    <option value="09:00">09:00</option>
-                    <option value="09:30">09:30</option>
-                    <option value="10:00">10:00</option>
-                    <option value="10:30">10:30</option>
-                    <option value="11:00">11:00</option>
-                    <option value="11:30">11:30</option>
-                    <option value="12:00">12:00</option>
-                    <option value="12:30">12:30</option>
-                    <option value="13:00">13:00</option>
-                    <option value="13:30">13:30</option>
-                    <option value="14:00">14:00</option>
-                    <option value="14:30">14:30</option>
-                    <option value="15:00">15:00</option>
-                    <option value="15:30">15:30</option>
-                    <option value="16:00">16:00</option>
-                    <option value="16:30">16:30</option>
-                    <option value="17:00">17:00</option>
-                    <option value="17:30">17:30</option>
-                    <option value="18:00">18:00</option>
-                    <option value="18:30">18:30</option>
-                    <option value="19:00">19:00</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label>✂️ Servicio:</label>
-            <textarea id="servicio" rows="3" placeholder="Ej: Corte de pelo, baño con perfume, corte de uñas, etc."></textarea>
-        </div>
-        
-        <div class="form-row">
-            <div class="form-group">
-                <label>💰 Precio:</label>
-                <input type="number" id="precio" placeholder="0.00" step="0.01">
-            </div>
-            <div class="form-group">
-                <label>💳 Método de Pago:</label>
-                <select id="metodo-pago">
-                    <option value="efect">💵 EFECTIVO</option>
-                    <option value="mp">🟢 MERCADO PAGO</option>
-                    <option value="nx">🔵 TRANSFERENCIA</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label>📝 Notas adicionales:</label>
-            <textarea id="notas" rows="2" placeholder="Observaciones o recordatorios..."></textarea>
-        </div>
-        
-        <div class="form-group" id="fecha-error" style="display: none; color: #d32f2f; background: #ffebee; padding: 10px; border-radius: 8px; border-left: 4px solid #d32f2f;">
-            ⚠️ <strong>No se pueden agendar turnos en fechas pasadas.</strong> Por favor, selecciona una fecha y hora futura.
-        </div>
-        
-        <button class="btn" onclick="guardarTurno()" style="width: 100%; padding: 18px; font-size: 1.1rem;">✅ Guardar Turno</button>
+    <div class="form-group">
+      <label>✂️ Servicio:</label>
+      <textarea id="servicio" rows="3" placeholder="Ej: Corte de pelo, baño con perfume, corte de uñas, etc."></textarea>
     </div>
     
-    <!-- Panel: Clientes -->
-    <div id="panel-clientes" class="panel">
-        <h2>👥 Clientes Registrados</h2>
-        <div class="form-group">
-            <input type="text" id="nuevo-cliente" placeholder="Nombre del cliente/perrito">
-            <button onclick="agregarCliente()" class="btn" style="margin-top: 10px;">➕ Agregar Cliente</button>
-        </div>
-        <div id="lista-clientes-registrados"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>💰 Precio:</label>
+        <input type="number" id="precio" placeholder="0.00" step="0.01">
+      </div>
+      <div class="form-group">
+        <label>💳 Método de Pago:</label>
+        <select id="metodo-pago">
+          <option value="efect">💵 EFECTIVO</option>
+          <option value="mp">🟢 MERCADO PAGO</option>
+          <option value="nx">🔵 TRANSFERENCIA</option>
+        </select>
+      </div>
     </div>
     
-    <!-- Panel: Estadísticas -->
-    <div id="panel-estadisticas" class="panel">
-        <h2>📊 Estadísticas Financieras</h2>
-        <div class="stats">
-            <div class="stat-box">
-                <h3>Hoy</h3>
-                <div class="valor" id="stats-hoy">$0</div>
-            </div>
-            <div class="stat-box">
-                <h3>Esta Semana</h3>
-                <div class="valor" id="stats-semana">$0</div>
-            </div>
-            <div class="stat-box">
-                <h3>Este Mes</h3>
-                <div class="valor" id="stats-mes">$0</div>
-            </div>
-            <div class="stat-box">
-                <h3>Este Año</h3>
-                <div class="valor" id="stats-anio">$0</div>
-            </div>
-        </div>
-        <div class="stats">
-            <div class="stat-box">
-                <h3>💵 EFECTIVO</h3>
-                <div class="valor" id="stats-efect">$0</div>
-            </div>
-            <div class="stat-box">
-                <h3>🟢 MERCADO PAGO</h3>
-                <div class="valor" id="stats-mp">$0</div>
-            </div>
-            <div class="stat-box">
-                <h3>🔵 TRANSFERENCIA</h3>
-                <div class="valor" id="stats-nx">$0</div>
-            </div>
-            <div class="stat-box">
-                <h3>TOTAL GENERAL</h3>
-                <div class="valor" id="stats-total">$0</div>
-            </div>
-        </div>
+    <div class="form-group">
+      <label>📝 Notas adicionales:</label>
+      <textarea id="notas" rows="2" placeholder="Observaciones o recordatorios..."></textarea>
     </div>
+    
+    <div id="fecha-error" style="display: none; color: #d32f2f; background: #ffebee; padding: 10px; border-radius: 8px; border-left: 4px solid #d32f2f;">
+      ⚠️ <strong>No se pueden agendar turnos en fechas pasadas.</strong>
+    </div>
+    
+    <button class="btn" onclick="guardarTurno()" style="width: 100%; padding: 16px; font-size: 1.1rem;">
+      ✅ Guardar Turno
+    </button>
+  </div>
+  
+  <!-- Panel: Clientes -->
+  <div id="panel-clientes" class="panel">
+    <h2>👥 Clientes Registrados</h2>
+    <div class="form-group">
+      <input type="text" id="nuevo-cliente" placeholder="Nombre del cliente/perrito">
+      <button onclick="agregarCliente()" class="btn" style="margin-top: 10px;">
+        ➕ Agregar Cliente
+      </button>
+    </div>
+    <div id="lista-clientes-registrados"></div>
+  </div>
+  
+  <!-- Panel: Estadísticas -->
+  <div id="panel-estadisticas" class="panel">
+    <h2>📊 Estadísticas Financieras</h2>
+    <div class="stats">
+      <div class="stat-box">
+        <h3>Hoy</h3>
+        <div class="valor" id="stats-hoy">$0</div>
+      </div>
+      <div class="stat-box">
+        <h3>Esta Semana</h3>
+        <div class="valor" id="stats-semana">$0</div>
+      </div>
+      <div class="stat-box">
+        <h3>Este Mes</h3>
+        <div class="valor" id="stats-mes">$0</div>
+      </div>
+      <div class="stat-box">
+        <h3>Este Año</h3>
+        <div class="valor" id="stats-anio">$0</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat-box">
+        <h3>💵 EFECTIVO</h3>
+        <div class="valor" id="stats-efect">$0</div>
+      </div>
+      <div class="stat-box">
+        <h3>🟢 MERCADO PAGO</h3>
+        <div class="valor" id="stats-mp">$0</div>
+      </div>
+      <div class="stat-box">
+        <h3>🔵 TRANSFERENCIA</h3>
+        <div class="valor" id="stats-nx">$0</div>
+      </div>
+      <div class="stat-box">
+        <h3>TOTAL GENERAL</h3>
+        <div class="valor" id="stats-total">$0</div>
+      </div>
+    </div>
+  </div>
 
-    <script>
-        // ====================
-        // 1. DATOS Y ESTADO
-        // ====================
-        let turnos = JSON.parse(localStorage.getItem('turnos')) || [];
-        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-        let mesActual = new Date().getMonth();
-        let anioActual = new Date().getFullYear();
-        let semanaActual = 0;
-        let deferredPrompt = null;
+  <script>
+    // ====================
+    // 1. DATOS Y ESTADO
+    // ====================
+    let turnos = JSON.parse(localStorage.getItem('turnos')) || [];
+    let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+    let mesActual = new Date().getMonth();
+    let anioActual = new Date().getFullYear();
+    let semanaActual = 0;
+    let deferredPrompt = null;
+    const BACKUP_KEY = 'patipet_backup_v1';
 
-        // ====================
-        // 2. FUNCIONES CORE
-        // ====================
-        function guardarDatos() {
-            localStorage.setItem('turnos', JSON.stringify(turnos));
-            localStorage.setItem('clientes', JSON.stringify(clientes));
-        }
-        
-        function mostrarPanel(id) {
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelector(`[onclick="mostrarPanel('${id}')"]`).classList.add('active');
-            
-            if (id === 'panel-mes') cargarMes();
-            if (id === 'panel-semana') cargarSemana();
-            if (id === 'panel-dia') cargarDia();
-            if (id === 'panel-estadisticas') calcularEstadisticas();
-            if (id === 'panel-clientes') cargarClientes();
-        }
+    // ====================
+    // 2. FUNCIONES CORE
+    // ====================
+    function guardarDatos() {
+      localStorage.setItem('turnos', JSON.stringify(turnos));
+      localStorage.setItem('clientes', JSON.stringify(clientes));
+    }
+    
+    function mostrarPanel(id) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelector(`[onclick="mostrarPanel('${id}')"]`).classList.add('active');
+      
+      if (id === 'panel-mes') cargarMes();
+      if (id === 'panel-semana') cargarSemana();
+      if (id === 'panel-dia') cargarDia();
+      if (id === 'panel-estadisticas') calcularEstadisticas();
+      if (id === 'panel-clientes') cargarClientes();
+    }
 
-        // ====================
-        // 3. VALIDACIÓN DE FECHAS PASADAS
-        // ====================
-        function validarFechaFutura(fechaHora) {
-            const ahora = new Date();
-            const fechaSeleccionada = new Date(fechaHora);
-            
-            // Restamos 1 minuto para permitir turnos que empiecen "ahora"
-            const ahoraMenosUnMinuto = new Date(ahora.getTime() - 60000);
-            
-            return fechaSeleccionada > ahoraMenosUnMinuto;
+    // ====================
+    // 3. CALENDARIO MENSUAL
+    // ====================
+    function cargarMes() {
+      const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", 
+                    "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+      document.getElementById('mes-actual').textContent = `${meses[mesActual]} ${anioActual}`;
+      
+      const primerDia = new Date(anioActual, mesActual, 1);
+      const ultimoDia = new Date(anioActual, mesActual + 1, 0);
+      const diasEnMes = ultimoDia.getDate();
+      const primerDiaSemana = (primerDia.getDay() + 6) % 7;
+      
+      let html = '';
+      for (let i = 0; i < primerDiaSemana; i++) {
+        html += `<div class="dia"></div>`;
+      }
+      
+      const hoy = new Date();
+      const hoyString = hoy.toISOString().split('T')[0];
+      
+      for (let dia = 1; dia <= diasEnMes; dia++) {
+        const fechaStr = `${anioActual}-${String(mesActual+1).padStart(2,'0')}-${String(dia).padStart(2,'0')}`;
+        const fechaDia = new Date(anioActual, mesActual, dia);
+        const fechaDiaStr = fechaDia.toISOString().split('T')[0];
+        
+        let clases = 'dia';
+        if (fechaDiaStr === hoyString) clases += ' hoy';
+        if (fechaDia < new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())) clases += ' pasado';
+        
+        const turnosDia = turnos.filter(t => t.fecha.split('T')[0] === fechaStr);
+        if (turnosDia.length > 0) clases += ' con-turno';
+        
+        const onClick = fechaDia < new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()) 
+          ? '' 
+          : `onclick="cargarDiaEspecifico('${fechaStr}')"`;
+        
+        html += `<div class="${clases}" ${onClick}>
+                   <div class="dia-numero">${dia}</div>
+                   ${turnosDia.length > 0 ? `
+                     <div class="turnos-container">
+                       ${turnosDia.slice(0, 3).map(t => `
+                         <div class="turno-en-casillero" title="${t.cliente} - ${t.servicio}">
+                           ${t.hora} - ${t.cliente.substring(0, 10)}${t.cliente.length > 10 ? '...' : ''}
+                         </div>
+                       `).join('')}
+                       ${turnosDia.length > 3 ? `<div style="font-size:8px; color:#666; text-align:center;">+${turnosDia.length - 3} más</div>` : ''}
+                     </div>
+                   ` : ''}
+                   ${turnosDia.length > 0 ? `<div class="turno-count">${turnosDia.length}</div>` : ''}
+                 </div>`;
+      }
+      
+      document.getElementById('calendario-mes').innerHTML = html;
+    }
+    
+    function cambiarMes(delta) {
+      if (delta === 0) {
+        const hoy = new Date();
+        mesActual = hoy.getMonth();
+        anioActual = hoy.getFullYear();
+      } else {
+        mesActual += delta;
+        if (mesActual < 0) {
+          mesActual = 11;
+          anioActual--;
+        } else if (mesActual > 11) {
+          mesActual = 0;
+          anioActual++;
         }
+      }
+      cargarMes();
+    }
 
-        function mostrarErrorFecha() {
-            const errorDiv = document.getElementById('fecha-error');
-            errorDiv.style.display = 'block';
-            errorDiv.classList.add('shake');
-            
-            // También hacer vibrar el campo de fecha
-            const fechaInput = document.getElementById('fecha');
-            fechaInput.classList.add('shake');
-            
-            setTimeout(() => {
-                errorDiv.classList.remove('shake');
-                fechaInput.classList.remove('shake');
-            }, 500);
-            
-            // Scroll al error
-            errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+    // ====================
+    // 4. VISTA SEMANAL
+    // ====================
+    function cargarSemana() {
+      const hoy = new Date();
+      const semanaStart = new Date(hoy);
+      semanaStart.setDate(hoy.getDate() - hoy.getDay() + 1 + (semanaActual * 7));
+      
+      let html = '';
+      for (let i = 0; i < 7; i++) {
+        const dia = new Date(semanaStart);
+        dia.setDate(semanaStart.getDate() + i);
+        const fechaStr = dia.toISOString().split('T')[0];
+        
+        const turnosDia = turnos.filter(t => t.fecha.split('T')[0] === fechaStr);
+        const esHoy = fechaStr === new Date().toISOString().split('T')[0];
+        const esPasado = dia < new Date(new Date().setHours(0,0,0,0));
+        
+        let claseDia = 'dia-semana';
+        if (esHoy) claseDia += ' hoy';
+        if (esPasado) claseDia += ' pasado';
+        
+        html += `<div class="${claseDia}">
+                   <strong style="color:#5d4037; font-size:1.1rem;">
+                     ${dia.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' })}
+                   </strong>
+                   ${esHoy ? '<span style="color:#ff7043; font-size:0.9rem;"> (HOY)</span>' : ''}
+                   <div style="margin-top:10px;">
+                     ${turnosDia.length > 0 ? turnosDia.map(t => `
+                       <div style="margin:8px 0; padding:8px; background:#f5f5f5; border-radius:8px; border-left:4px solid #ffab91;">
+                         <div><strong>🐶 ${t.cliente}</strong></div>
+                         <div>⏰ ${t.hora}</div>
+                         <div>💰 $${t.precio}</div>
+                       </div>
+                     `).join('') : '<div style="text-align:center; color:#8d6e63; padding:15px;">Sin turnos</div>'}
+                   </div>
+                 </div>`;
+      }
+      
+      document.getElementById('calendario-semana').innerHTML = html;
+    }
+    
+    function cambiarSemana(delta) {
+      semanaActual += delta;
+      cargarSemana();
+    }
 
-        function ocultarErrorFecha() {
-            document.getElementById('fecha-error').style.display = 'none';
-        }
+    // ====================
+    // 5. VISTA DIARIA
+    // ====================
+    function cargarDia(fecha = null) {
+      const inputFecha = document.getElementById('fecha-dia');
+      const fechaObj = fecha ? new Date(fecha) : new Date(inputFecha.value || new Date());
+      const fechaStr = fechaObj.toISOString().split('T')[0];
+      inputFecha.value = fechaStr;
+      
+      const turnosDia = turnos.filter(t => t.fecha.split('T')[0] === fechaStr)
+                             .sort((a,b) => a.hora.localeCompare(b.hora));
+      
+      let html = `<h3 style="color:#5d4037; margin-bottom:15px;">
+                   ${fechaObj.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                 </h3>`;
+      
+      if (turnosDia.length === 0) {
+        html += '<div style="text-align:center; padding:30px; color:#8d6e63; background:#f9f9f9; border-radius:10px;">';
+        html += '<div style="font-size:48px; margin-bottom:15px;">🐕</div>';
+        html += '<p style="font-size:1.1rem;">No hay turnos programados para este día.</p>';
+        html += '</div>';
+      } else {
+        turnosDia.forEach(t => {
+          html += `
+            <div class="turno-item">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <div><strong style="font-size:1.2rem;">🐶 ${t.cliente}</strong></div>
+                <div><span style="background:#ffab91; color:white; padding:4px 10px; border-radius:12px; font-size:12px;">${t.hora}</span></div>
+              </div>
+              <div style="margin-bottom:8px;"><strong>✂️ Servicio:</strong> ${t.servicio}</div>
+              <div style="margin-bottom:8px;"><strong>💰 Precio:</strong> $${t.precio.toFixed(2)}</div>
+              ${t.telefono ? `<div style="margin-bottom:8px;"><strong>📞 Teléfono:</strong> ${t.telefono}</div>` : ''}
+              ${t.notas ? `<div style="margin-bottom:15px;"><strong>📝 Notas:</strong> ${t.notas}</div>` : ''}
+              <div class="action-buttons">
+                <button class="whatsapp-btn" onclick="enviarWhatsApp(${t.id})">
+                  <span>📱</span> WhatsApp
+                </button>
+                <button class="edit-btn" onclick="editarTurno(${t.id})">
+                  <span>✏️</span> Editar
+                </button>
+                <button class="delete-btn" onclick="eliminarTurno(${t.id})">
+                  <span>🗑️</span> Eliminar
+                </button>
+              </div>
+            </div>
+          `;
+        });
+      }
+      
+      document.getElementById('lista-dia').innerHTML = html;
+    }
+    
+    function cargarDiaEspecifico(fechaStr) {
+      const fechaObj = new Date(fechaStr);
+      const hoy = new Date();
+      hoy.setHours(0,0,0,0);
+      
+      if (fechaObj < hoy) {
+        alert('⚠️ Este día ya pasó. Puedes ver los turnos pero no modificarlos.');
+      }
+      
+      mostrarPanel('panel-dia');
+      setTimeout(() => cargarDia(fechaStr), 100);
+    }
 
-        // ====================
-        // 4. CALENDARIO MENSUAL
-        // ====================
-        function cargarMes() {
-            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", 
-                          "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-            document.getElementById('mes-actual').textContent = `${meses[mesActual]} ${anioActual}`;
-            
-            const primerDia = new Date(anioActual, mesActual, 1);
-            const ultimoDia = new Date(anioActual, mesActual + 1, 0);
-            const diasEnMes = ultimoDia.getDate();
-            const primerDiaSemana = (primerDia.getDay() + 6) % 7;
-            
-            let html = '';
-            for (let i = 0; i < primerDiaSemana; i++) {
-                html += `<div class="dia"></div>`;
-            }
-            
-            const hoy = new Date();
-            const hoyString = hoy.toISOString().split('T')[0];
-            
-            for (let dia = 1; dia <= diasEnMes; dia++) {
-                const fechaStr = `${anioActual}-${String(mesActual+1).padStart(2,'0')}-${String(dia).padStart(2,'0')}`;
-                const fechaDia = new Date(anioActual, mesActual, dia);
-                const fechaDiaStr = fechaDia.toISOString().split('T')[0];
-                
-                let clases = 'dia';
-                if (fechaDiaStr === hoyString) clases += ' hoy';
-                
-                // Marcar días pasados
-                if (fechaDia < new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())) {
-                    clases += ' pasado';
-                }
-                
-                const turnosDia = turnos.filter(t => t.fecha.split('T')[0] === fechaStr);
-                if (turnosDia.length > 0) clases += ' con-turno';
-                
-                // Solo hacer clickable si no es día pasado
-                const onClick = fechaDia < new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()) 
-                    ? '' 
-                    : `onclick="cargarDiaEspecifico('${fechaStr}')"`;
-                
-                html += `<div class="${clases}" ${onClick}>
-                           <div>${dia}</div>
-                           ${turnosDia.length > 0 ? `<div class="turno-count">${turnosDia.length} turno${turnosDia.length > 1 ? 's' : ''}</div>` : ''}
-                         </div>`;
-            }
-            
-            document.getElementById('calendario-mes').innerHTML = html;
-        }
-        
-        function cambiarMes(delta) {
-            if (delta === 0) {
-                const hoy = new Date();
-                mesActual = hoy.getMonth();
-                anioActual = hoy.getFullYear();
-            } else {
-                mesActual += delta;
-                if (mesActual < 0) {
-                    mesActual = 11;
-                    anioActual--;
-                } else if (mesActual > 11) {
-                    mesActual = 0;
-                    anioActual++;
-                }
-            }
-            cargarMes();
-        }
+    // ====================
+    // 6. GESTIÓN DE TURNOS
+    // ====================
+    function guardarTurno() {
+      const cliente = document.getElementById('cliente').value.trim();
+      const telefono = document.getElementById('telefono').value.trim();
+      const fecha = document.getElementById('fecha').value;
+      const hora = document.getElementById('hora').value;
+      const servicio = document.getElementById('servicio').value.trim();
+      const precio = parseFloat(document.getElementById('precio').value) || 0;
+      const metodo = document.getElementById('metodo-pago').value;
+      const notas = document.getElementById('notas').value.trim();
+      
+      if (!cliente || !fecha || !hora || !servicio) {
+        alert('Por favor, completa los campos obligatorios: Cliente, Fecha, Hora y Servicio.');
+        return;
+      }
+      
+      const fechaHora = fecha + 'T' + hora;
+      const ahora = new Date();
+      const fechaSeleccionada = new Date(fechaHora);
+      
+      if (fechaSeleccionada <= ahora) {
+        document.getElementById('fecha-error').style.display = 'block';
+        setTimeout(() => document.getElementById('fecha-error').style.display = 'none', 3000);
+        return;
+      }
+      
+      const nuevoTurno = {
+        id: Date.now(),
+        cliente: cliente,
+        telefono: telefono,
+        fecha: fechaHora,
+        hora: hora,
+        servicio: servicio,
+        precio: precio,
+        metodo: metodo,
+        notas: notas,
+        fechaCreacion: new Date().toISOString()
+      };
+      
+      turnos.push(nuevoTurno);
+      
+      if (!clientes.includes(cliente)) {
+        clientes.push(cliente);
+        guardarDatos();
+        cargarListaClientes();
+      }
+      
+      guardarDatos();
+      alert('✅ Turno guardado exitosamente!');
+      
+      // Limpiar formulario
+      document.getElementById('cliente').value = '';
+      document.getElementById('telefono').value = '';
+      document.getElementById('servicio').value = '';
+      document.getElementById('precio').value = '';
+      document.getElementById('notas').value = '';
+      
+      mostrarPanel('panel-dia');
+      cargarDia(fecha);
+      cargarMes();
+    }
+    
+    function editarTurno(id) {
+      const turno = turnos.find(t => t.id === id);
+      if (!turno) return;
+      
+      document.getElementById('cliente').value = turno.cliente;
+      document.getElementById('telefono').value = turno.telefono || '';
+      document.getElementById('fecha').value = turno.fecha.split('T')[0];
+      document.getElementById('hora').value = turno.hora;
+      document.getElementById('servicio').value = turno.servicio;
+      document.getElementById('precio').value = turno.precio;
+      document.getElementById('metodo-pago').value = turno.metodo;
+      document.getElementById('notas').value = turno.notas || '';
+      
+      eliminarTurno(id, false);
+      mostrarPanel('panel-nuevo');
+    }
+    
+    function eliminarTurno(id, confirmar = true) {
+      if (confirmar && !confirm('¿Estás seguro de eliminar este turno?')) return;
+      
+      turnos = turnos.filter(t => t.id !== id);
+      guardarDatos();
+      cargarDia();
+      cargarMes();
+    }
 
-        // ====================
-        // 5. VISTA SEMANAL
-        // ====================
-        function cargarSemana() {
-            const hoy = new Date();
-            const semanaStart = new Date(hoy);
-            semanaStart.setDate(hoy.getDate() - hoy.getDay() + 1 + (semanaActual * 7));
-            
-            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">';
-            for (let i = 0; i < 7; i++) {
-                const dia = new Date(semanaStart);
-                dia.setDate(semanaStart.getDate() + i);
-                const fechaStr = dia.toISOString().split('T')[0];
-                
-                const turnosDia = turnos.filter(t => t.fecha.split('T')[0] === fechaStr);
-                
-                const esHoy = fechaStr === new Date().toISOString().split('T')[0];
-                const esPasado = dia < new Date(new Date().setHours(0,0,0,0));
-                
-                const estiloFondo = esPasado ? '#f5f5f5' : (esHoy ? '#fff3e0' : 'white');
-                const estiloBorde = esPasado ? '#ddd' : '#ffccd5';
-                const textoPasado = esPasado ? '<span style="color:#9e9e9e; font-size:0.9rem;"> (PASADO)</span>' : '';
-                
-                html += `<div style="border:1px solid ${estiloBorde}; padding:15px; border-radius:10px; background:${estiloFondo};">
-                           <strong style="color:#5d4037; font-size:1.1rem;">${formatearFechaCorta(dia)}</strong>
-                           ${esHoy ? '<span style="color:#ff7043; font-size:0.9rem;"> (HOY)</span>' : ''}
-                           ${textoPasado}
-                           <div style="margin-top:10px;">
-                           ${turnosDia.length > 0 ? turnosDia.map(t => `
-                             <div style="margin:10px 0; padding:10px; background:#f5f5f5; border-radius:8px; border-left:4px solid #ffab91;">
-                               <div style="font-weight:bold;">🐶 ${t.cliente}</div>
-                               <div>⏰ ${t.hora}</div>
-                               <div>✂️ ${t.servicio.substring(0,25)}${t.servicio.length > 25 ? '...' : ''}</div>
-                               <div>💰 $${t.precio} <span class="tag-pago ${t.metodo}">${t.metodo.toUpperCase()}</span></div>
-                             </div>
-                           `).join('') : '<div style="text-align:center; color:#8d6e63; padding:20px;">Sin turnos</div>'}
-                           </div>
-                         </div>`;
-            }
-            html += '</div>';
-            
-            document.getElementById('calendario-semana').innerHTML = html;
-            document.getElementById('semana-actual').textContent = `Semana ${getSemanaDelAnio(semanaStart)}, ${semanaStart.getFullYear()}`;
-        }
-        
-        function cambiarSemana(delta) {
-            semanaActual += delta;
-            cargarSemana();
-        }
-        
-        function getSemanaDelAnio(fecha) {
-            const primerDiaAnio = new Date(fecha.getFullYear(), 0, 1);
-            const dias = Math.floor((fecha - primerDiaAnio) / (24 * 60 * 60 * 1000));
-            return Math.ceil((dias + primerDiaAnio.getDay() + 1) / 7);
-        }
+    // ====================
+    // 7. WHATSAPP Y COMPARTIR
+    // ====================
+    function enviarWhatsApp(turnoId) {
+      const turno = turnos.find(t => t.id === turnoId);
+      if (!turno) return;
+      
+      const telefono = turno.telefono || '';
+      const telefonoLimpio = telefono.replace(/\D/g, '');
+      
+      const fecha = new Date(turno.fecha);
+      const fechaFormateada = fecha.toLocaleDateString('es-ES', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      
+      const mensaje = `*Recordatorio de turno - Patipet*%0A%0A` +
+                     `*Cliente:* ${turno.cliente}%0A` +
+                     `*Fecha:* ${fechaFormateada}%0A` +
+                     `*Hora:* ${turno.hora}%0A` +
+                     `*Servicio:* ${turno.servicio}%0A` +
+                     `*Precio:* $${turno.precio.toFixed(2)}%0A` +
+                     (turno.notas ? `*Notas:* ${turno.notas}%0A` : '') +
+                     `%0A¡Esperamos verte pronto! 🐾`;
+      
+      let urlWhatsApp;
+      if (telefonoLimpio) {
+        urlWhatsApp = `https://wa.me/${telefonoLimpio}?text=${mensaje}`;
+      } else {
+        urlWhatsApp = `https://wa.me/?text=${mensaje}`;
+        alert('No hay teléfono registrado. Se abrirá WhatsApp sin número específico.');
+      }
+      
+      window.open(urlWhatsApp, '_blank');
+    }
+    
+    function compartirTurnosDia() {
+      const fechaInput = document.getElementById('fecha-dia').value;
+      const fecha = new Date(fechaInput);
+      const turnosDia = turnos.filter(t => t.fecha.split('T')[0] === fechaInput);
+      
+      if (turnosDia.length === 0) {
+        alert('No hay turnos para compartir en esta fecha.');
+        return;
+      }
+      
+      const fechaFormateada = fecha.toLocaleDateString('es-ES', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      
+      let texto = `*Turnos del día - ${fechaFormateada} - Patipet*%0A%0A`;
+      texto += `*Total de turnos:* ${turnosDia.length}%0A%0A`;
+      
+      turnosDia.forEach((t, index) => {
+        texto += `*Turno ${index + 1}:*%0A`;
+        texto += `👤 ${t.cliente}%0A`;
+        texto += `⏰ ${t.hora}%0A`;
+        texto += `✂️ ${t.servicio}%0A`;
+        texto += `💰 $${t.precio.toFixed(2)}%0A`;
+        if (t.telefono) texto += `📞 ${t.telefono}%0A`;
+        texto += `---%0A`;
+      });
+      
+      const urlWhatsApp = `https://wa.me/?text=${texto}`;
+      window.open(urlWhatsApp, '_blank');
+    }
 
-        // ====================
-        // 6. VISTA DIARIA
-        // ====================
-        function cargarDia(fecha = null) {
-            const inputFecha = document.getElementById('fecha-dia');
-            const fechaObj = fecha ? new Date(fecha) : new Date(inputFecha.value || new Date());
-            const fechaStr = fechaObj.toISOString().split('T')[0];
-            
-            inputFecha.value = fechaStr;
-            
-            const turnosDia = turnos.filter(t => t.fecha.split('T')[0] === fechaStr)
-                                   .sort((a,b) => a.hora.localeCompare(b.hora));
-            
-            const hoy = new Date().toISOString().split('T')[0];
-            const esHoy = fechaStr === hoy;
-            const esPasado = fechaObj < new Date(new Date().setHours(0,0,0,0));
-            
-            let html = `<h3 style="color:#5d4037; margin-bottom:20px;">${formatearFecha(fechaObj)}`;
-            html += esHoy ? ' <span style="color:#ff7043">(HOY)</span>' : '';
-            html += esPasado ? ' <span style="color:#9e9e9e">(PASADO)</span>' : '';
-            html += '</h3>';
-            
-            if (turnosDia.length === 0) {
-                html += '<div style="text-align:center; padding:40px; color:#8d6e63; background:#f9f9f9; border-radius:10px;">';
-                html += '<div style="font-size:48px; margin-bottom:20px;">🐕</div>';
-                html += '<p style="font-size:1.2rem;">No hay turnos programados para este día.</p>';
-                if (esPasado) {
-                    html += '<p style="margin-top:10px; color:#ff7043;">⚠️ Este día ya pasó</p>';
-                } else {
-                    html += '<p style="margin-top:10px;">¡Agrega un nuevo turno haciendo clic en "Nuevo Turno"!</p>';
-                }
-                html += '</div>';
-            } else {
-                const totalDia = turnosDia.reduce((sum, t) => sum + (t.precio || 0), 0);
-                html += `<p style="margin-bottom:20px; color:#8d6e63; font-size:1.1rem;">
-                           📊 <strong>Resumen del día:</strong> ${turnosDia.length} turno${turnosDia.length !== 1 ? 's' : ''} - Total: <strong>$${totalDia.toFixed(2)}</strong>
-                         </p>`;
-                
-                if (esPasado) {
-                    html += `<div style="background:#fff3e0; padding:10px; border-radius:8px; margin-bottom:20px; border-left:4px solid #ff9800;">
-                               ⚠️ <strong>Día pasado</strong> - Los turnos de días pasados son solo para consulta.
-                            </div>`;
-                }
-                
-                turnosDia.forEach(t => {
-                    const claseHoy = esHoy ? 'hoy' : '';
-                    const telefono = t.telefono || 'No registrado';
-                    const notas = t.notas ? `<div class="notas-info"><strong>📝 Notas:</strong> ${t.notas}</div>` : '';
-                    
-                    html += `
-                        <div class="turno-item ${claseHoy}">
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap;">
-                                <div><strong style="font-size:1.2rem;">🐶 ${t.cliente}</strong></div>
-                                <div><span class="tag-pago ${t.metodo}">${t.metodo.toUpperCase()}</span></div>
-                            </div>
-                            <div class="telefono-info">
-                                <span>📞</span>
-                                <span>${telefono}</span>
-                            </div>
-                            <div style="margin-bottom:10px;"><strong>⏰ Hora:</strong> ${t.hora}</div>
-                            <div style="margin-bottom:10px;"><strong>✂️ Servicio:</strong> ${t.servicio}</div>
-                            ${notas}
-                            <div style="margin-bottom:15px;"><strong>💰 Precio:</strong> $${t.precio.toFixed(2)}</div>
-                            <div class="action-buttons">
-                                ${!esPasado ? `
-                                <button class="whatsapp-btn" onclick="enviarWhatsApp(${t.id})">
-                                    <span>📱</span> WhatsApp
-                                </button>
-                                <button class="share-btn" onclick="compartirTurno(${t.id})">
-                                    <span>📤</span> Compartir
-                                </button>
-                                <button class="edit-btn" onclick="editarTurno(${t.id})">
-                                    <span>✏️</span> Editar
-                                </button>
-                                ` : ''}
-                                <button class="delete-btn" onclick="eliminarTurno(${t.id})">
-                                    <span>🗑️</span> Eliminar
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-            
-            document.getElementById('lista-dia').innerHTML = html;
-        }
-        
-        function cargarDiaEspecifico(fechaStr) {
-            const fechaObj = new Date(fechaStr);
-            const hoy = new Date();
-            hoy.setHours(0,0,0,0);
-            
-            if (fechaObj < hoy) {
-                alert('⚠️ Este día ya pasó. Puedes ver los turnos pero no modificarlos.');
-            }
-            
-            mostrarPanel('panel-dia');
-            setTimeout(() => cargarDia(fechaStr), 100);
-        }
+    // ====================
+    // 8. GESTIÓN DE CLIENTES
+    // ====================
+    function cargarListaClientes() {
+      const datalist = document.getElementById('lista-clientes');
+      datalist.innerHTML = clientes.map(c => `<option value="${c}">`).join('');
+    }
+    
+    function cargarClientes() {
+      const lista = document.getElementById('lista-clientes-registrados');
+      if (clientes.length === 0) {
+        lista.innerHTML = '<div style="text-align:center; padding:25px; color:#8d6e63; background:#f9f9f9; border-radius:10px;">No hay clientes registrados aún.</div>';
+        return;
+      }
+      
+      lista.innerHTML = clientes.map(c => {
+        const turnosCliente = turnos.filter(t => t.cliente === c);
+        return `
+          <div style="padding:12px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:bold;">🐶 ${c}</div>
+              <div style="font-size:0.9rem; color:#8d6e63;">
+                ${turnosCliente.length} turno${turnosCliente.length !== 1 ? 's' : ''}
+              </div>
+            </div>
+            <button onclick="eliminarCliente('${c}')" style="padding:6px 12px; background:#ffcdd2; color:#c62828; border:none; border-radius:6px; cursor:pointer; font-size:12px;">
+              Eliminar
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function guardarCliente() {
+      const clienteInput = document.getElementById('cliente');
+      const nombre = clienteInput.value.trim();
+      
+      if (!nombre) {
+        alert('Por favor, escribe un nombre para el cliente.');
+        return;
+      }
+      
+      if (!clientes.includes(nombre)) {
+        clientes.push(nombre);
+        guardarDatos();
+        cargarListaClientes();
+        alert('✅ Cliente guardado exitosamente!');
+      }
+    }
+    
+    function agregarCliente() {
+      const input = document.getElementById('nuevo-cliente');
+      const nombre = input.value.trim();
+      
+      if (!nombre) {
+        alert('Por favor, escribe un nombre para el cliente.');
+        return;
+      }
+      
+      if (!clientes.includes(nombre)) {
+        clientes.push(nombre);
+        guardarDatos();
+        cargarListaClientes();
+        cargarClientes();
+        input.value = '';
+        alert('✅ Cliente agregado exitosamente!');
+      } else {
+        alert('El cliente ya existe en la lista.');
+      }
+    }
+    
+    function eliminarCliente(nombre) {
+      if (!confirm(`¿Estás seguro de eliminar al cliente "${nombre}"?\nEsta acción también eliminará todos sus turnos registrados.`)) return;
+      
+      clientes = clientes.filter(c => c !== nombre);
+      turnos = turnos.filter(t => t.cliente !== nombre);
+      guardarDatos();
+      cargarClientes();
+      cargarListaClientes();
+      cargarMes();
+      alert(`Cliente "${nombre}" eliminado.`);
+    }
 
-        // ====================
-        // 7. GESTION TURNOS - CON VALIDACIÓN DE FECHAS PASADAS - MODIFICADO
-        // ====================
-        function guardarTurno() {
-            const cliente = document.getElementById('cliente').value.trim();
-            const telefono = document.getElementById('telefono').value.trim();
-            const fecha = document.getElementById('fecha').value;
-            const hora = document.getElementById('hora').value;
-            const fechaHora = fecha + 'T' + hora;
-            const servicio = document.getElementById('servicio').value.trim();
-            const precio = parseFloat(document.getElementById('precio').value) || 0;
-            const metodo = document.getElementById('metodo-pago').value;
-            const notas = document.getElementById('notas').value.trim();
-            
-            // Validar campos obligatorios
-            if (!cliente || !fecha || !hora || !servicio) {
-                alert('Por favor, completa los campos obligatorios: Cliente, Fecha, Hora y Servicio.');
-                return;
-            }
-            
-            // Validar que no sea fecha pasada
-            if (!validarFechaFutura(fechaHora)) {
-                mostrarErrorFecha();
-                return;
-            }
-            
-            ocultarErrorFecha();
-            
-            const nuevoTurno = {
-                id: Date.now(),
-                cliente: cliente,
-                telefono: telefono,
-                fecha: fechaHora,
-                hora: hora,
-                servicio: servicio,
-                precio: precio,
-                metodo: metodo,
-                notas: notas,
-                fechaCreacion: new Date().toISOString()
-            };
-            
-            turnos.push(nuevoTurno);
-            
-            if (!clientes.includes(cliente)) {
-                clientes.push(cliente);
-                guardarDatos();
-                cargarListaClientes();
-            }
-            
-            guardarDatos();
-            
-            // Limpiar formulario
-            document.getElementById('cliente').value = '';
-            document.getElementById('telefono').value = '';
-            document.getElementById('fecha').value = '';
-            document.getElementById('servicio').value = '';
-            document.getElementById('precio').value = '';
-            document.getElementById('notas').value = '';
-            
-            alert('✅ Turno guardado exitosamente!');
-            mostrarPanel('panel-dia');
-            cargarDia(fecha);
-            cargarMes();
-        }
-        
-        function editarTurno(id) {
-            const turno = turnos.find(t => t.id === id);
-            if (!turno) return;
-            
-            // Verificar si el turno es pasado
-            const fechaTurno = new Date(turno.fecha);
-            const ahora = new Date();
-            
-            if (fechaTurno < ahora) {
-                if (!confirm('⚠️ Este turno ya pasó. ¿Deseas editarlo de todos modos?\n\nNormalmente no se editan turnos pasados.')) {
-                    return;
-                }
-            }
-            
-            document.getElementById('cliente').value = turno.cliente;
-            document.getElementById('telefono').value = turno.telefono || '';
-            document.getElementById('fecha').value = turno.fecha.split('T')[0];
-            document.getElementById('hora').value = turno.hora;
-            document.getElementById('servicio').value = turno.servicio;
-            document.getElementById('precio').value = turno.precio;
-            document.getElementById('metodo-pago').value = turno.metodo;
-            document.getElementById('notas').value = turno.notas || '';
-            
-            eliminarTurno(id, false);
-            mostrarPanel('panel-nuevo');
-        }
-        
-        function eliminarTurno(id, confirmar = true) {
-            if (confirmar && !confirm('¿Estás seguro de eliminar este turno?')) return;
-            
-            turnos = turnos.filter(t => t.id !== id);
-            guardarDatos();
-            cargarDia();
-            cargarMes();
-        }
+    // ====================
+    // 9. ESTADÍSTICAS
+    // ====================
+    function calcularEstadisticas() {
+      const hoy = new Date().toISOString().split('T')[0];
+      const esteMes = new Date().getMonth();
+      const esteAnio = new Date().getFullYear();
+      
+      const turnosHoy = turnos.filter(t => t.fecha.split('T')[0] === hoy);
+      const turnosMes = turnos.filter(t => new Date(t.fecha).getMonth() === esteMes);
+      const turnosAnio = turnos.filter(t => new Date(t.fecha).getFullYear() === esteAnio);
+      
+      const suma = (arr, metodo = null) => {
+        const filtrados = metodo ? arr.filter(t => t.metodo === metodo) : arr;
+        return filtrados.reduce((sum, t) => sum + (t.precio || 0), 0);
+      };
+      
+      document.getElementById('stats-hoy').textContent = `$${suma(turnosHoy).toFixed(2)}`;
+      document.getElementById('stats-semana').textContent = `$${suma(turnos.filter(t => {
+        const fechaTurno = new Date(t.fecha);
+        const hoy = new Date();
+        const inicioSemana = new Date(hoy.setDate(hoy.getDate() - hoy.getDay()));
+        return fechaTurno >= inicioSemana;
+      })).toFixed(2)}`;
+      document.getElementById('stats-mes').textContent = `$${suma(turnosMes).toFixed(2)}`;
+      document.getElementById('stats-anio').textContent = `$${suma(turnosAnio).toFixed(2)}`;
+      
+      document.getElementById('stats-efect').textContent = `$${suma(turnos, 'efect').toFixed(2)}`;
+      document.getElementById('stats-mp').textContent = `$${suma(turnos, 'mp').toFixed(2)}`;
+      document.getElementById('stats-nx').textContent = `$${suma(turnos, 'nx').toFixed(2)}`;
+      document.getElementById('stats-total').textContent = `$${suma(turnos).toFixed(2)}`;
+    }
 
-        // ====================
-        // 8. FUNCIONES WHATSAPP Y COMPARTIR
-        // ====================
-        function enviarWhatsApp(turnoId) {
-            const turno = turnos.find(t => t.id === turnoId);
-            if (!turno) return;
-            
-            // Verificar si el turno es pasado
-            const fechaTurno = new Date(turno.fecha);
-            const ahora = new Date();
-            
-            if (fechaTurno < ahora) {
-                if (!confirm('⚠️ Este turno ya pasó. ¿Deseas enviar el recordatorio de todos modos?')) {
-                    return;
-                }
-            }
-            
-            const telefono = turno.telefono || '';
-            const telefonoLimpio = telefono.replace(/\D/g, '');
-            
-            const fecha = new Date(turno.fecha);
-            const fechaFormateada = fecha.toLocaleDateString('es-ES', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            
-            const mensaje = `*Recordatorio de turno - Patipet*%0A%0A` +
-                           `*Cliente:* ${turno.cliente}%0A` +
-                           `*Fecha:* ${fechaFormateada}%0A` +
-                           `*Hora:* ${turno.hora}%0A` +
-                           `*Servicio:* ${turno.servicio}%0A` +
-                           `*Precio:* $${turno.precio.toFixed(2)}%0A` +
-                           (turno.notas ? `*Notas:* ${turno.notas}%0A` : '') +
-                           `%0A¡Esperamos verte pronto! 🐾`;
-            
-            let urlWhatsApp;
-            if (telefonoLimpio) {
-                urlWhatsApp = `https://wa.me/${telefonoLimpio}?text=${mensaje}`;
-            } else {
-                urlWhatsApp = `https://wa.me/?text=${mensaje}`;
-                alert('No hay teléfono registrado. Se abrirá WhatsApp sin número específico.');
-            }
-            
-            window.open(urlWhatsApp, '_blank');
-        }
-        
-        function compartirTurno(turnoId) {
-            const turno = turnos.find(t => t.id === turnoId);
-            if (!turno) return;
-            
-            const fecha = new Date(turno.fecha);
-            const fechaFormateada = fecha.toLocaleDateString('es-ES', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            
-            const texto = `Turno agendado - Patipet\n\n` +
-                         `Cliente: ${turno.cliente}\n` +
-                         `Fecha: ${fechaFormateada}\n` +
-                         `Hora: ${turno.hora}\n` +
-                         `Servicio: ${turno.servicio}\n` +
-                         `Precio: $${turno.precio.toFixed(2)}\n` +
-                         (turno.notas ? `Notas: ${turno.notas}\n` : '') +
-                         `\n¡Gracias por confiar en Patipet! 🐾`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Turno Patipet',
-                    text: texto,
-                    url: window.location.href
-                }).catch(console.error);
-            } else {
-                navigator.clipboard.writeText(texto).then(() => {
-                    alert('✅ Información del turno copiada al portapapeles. Puedes pegarla en WhatsApp o cualquier otra app.');
-                }).catch(() => {
-                    const textArea = document.createElement('textarea');
-                    textArea.value = texto;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    alert('✅ Información del turno copiada al portapapeles.');
-                });
-            }
-        }
-        
-        function compartirTurnosDia() {
-            const fechaInput = document.getElementById('fecha-dia').value;
-            const fecha = new Date(fechaInput);
-            const turnosDia = turnos.filter(t => t.fecha.split('T')[0] === fechaInput)
-                                   .sort((a,b) => a.hora.localeCompare(b.hora));
-            
-            if (turnosDia.length === 0) {
-                alert('No hay turnos para compartir en esta fecha.');
-                return;
-            }
-            
-            const fechaFormateada = fecha.toLocaleDateString('es-ES', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            
-            let texto = `*Turnos del día - ${fechaFormateada} - Patipet*%0A%0A`;
-            texto += `*Total de turnos:* ${turnosDia.length}%0A%0A`;
-            
-            turnosDia.forEach((t, index) => {
-                texto += `*Turno ${index + 1}:*%0A`;
-                texto += `👤 ${t.cliente}%0A`;
-                texto += `⏰ ${t.hora}%0A`;
-                texto += `✂️ ${t.servicio}%0A`;
-                texto += `💰 $${t.precio.toFixed(2)}%0A`;
-                if (t.telefono) texto += `📞 ${t.telefono}%0A`;
-                texto += `---%0A`;
-            });
-            
-            texto += `%0ATotal del día: *$${turnosDia.reduce((sum, t) => sum + t.precio, 0).toFixed(2)}*`;
-            
-            const urlWhatsApp = `https://wa.me/?text=${texto}`;
-            window.open(urlWhatsApp, '_blank');
-        }
-
-        // ====================
-        // 9. GESTION CLIENTES
-        // ====================
-        function cargarListaClientes() {
-            const datalist = document.getElementById('lista-clientes');
-            datalist.innerHTML = clientes.map(c => `<option value="${c}">`).join('');
-        }
-        
-        function cargarClientes() {
-            const lista = document.getElementById('lista-clientes-registrados');
-            if (clientes.length === 0) {
-                lista.innerHTML = '<div style="text-align:center; padding:30px; color:#8d6e63; background:#f9f9f9; border-radius:10px;">No hay clientes registrados aún.</div>';
-                return;
-            }
-            
-            lista.innerHTML = clientes.map(c => {
-                const turnosCliente = turnos.filter(t => t.cliente === c);
-                const ultimoTurno = turnosCliente.length > 0 
-                    ? new Date(turnosCliente[turnosCliente.length-1].fecha).toLocaleDateString('es-ES')
-                    : 'Sin turnos';
-                    
-                return `
-                <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-                    <div>
-                        <div style="font-weight:bold; font-size:1.1rem;">🐶 ${c}</div>
-                        <div style="font-size:0.9rem; color:#8d6e63;">
-                            ${turnosCliente.length} turno${turnosCliente.length !== 1 ? 's' : ''} - Último: ${ultimoTurno}
-                        </div>
-                    </div>
-                    <button onclick="eliminarCliente('${c}')" style="padding:8px 15px; background:#ffcdd2; color:#c62828; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">Eliminar</button>
-                </div>
-            `}).join('');
-        }
-        
-        function guardarCliente() {
-            const clienteInput = document.getElementById('cliente');
-            const nombre = clienteInput.value.trim();
-            
-            if (!nombre) {
-                alert('Por favor, escribe un nombre para el cliente.');
-                return;
-            }
-            
-            if (!clientes.includes(nombre)) {
-                clientes.push(nombre);
-                guardarDatos();
-                cargarListaClientes();
-                alert('✅ Cliente guardado exitosamente!');
-            }
-        }
-        
-        function agregarCliente() {
-            const input = document.getElementById('nuevo-cliente');
-            const nombre = input.value.trim();
-            
-            if (!nombre) {
-                alert('Por favor, escribe un nombre para el cliente.');
-                return;
-            }
-            
-            if (!clientes.includes(nombre)) {
-                clientes.push(nombre);
-                guardarDatos();
-                cargarListaClientes();
-                cargarClientes();
-                input.value = '';
-                alert('✅ Cliente agregado exitosamente!');
-            } else {
-                alert('El cliente ya existe en la lista.');
-            }
-        }
-        
-        function eliminarCliente(nombre) {
-            if (!confirm(`¿Estás seguro de eliminar al cliente "${nombre}"?\nEsta acción también eliminará todos sus turnos registrados.`)) return;
-            
-            clientes = clientes.filter(c => c !== nombre);
-            turnos = turnos.filter(t => t.cliente !== nombre);
-            guardarDatos();
-            cargarClientes();
-            cargarListaClientes();
-            cargarMes();
-            alert(`Cliente "${nombre}" eliminado.`);
-        }
-
-        // ====================
-        // 10. ESTADISTICAS
-        // ====================
-        function calcularEstadisticas() {
-            const hoy = new Date().toISOString().split('T')[0];
-            const estaSemana = getSemanaDelAnio(new Date());
-            const esteMes = new Date().getMonth();
-            const esteAnio = new Date().getFullYear();
-            
-            const turnosHoy = turnos.filter(t => t.fecha.split('T')[0] === hoy);
-            const turnosSemana = turnos.filter(t => getSemanaDelAnio(new Date(t.fecha)) === estaSemana);
-            const turnosMes = turnos.filter(t => new Date(t.fecha).getMonth() === esteMes);
-            const turnosAnio = turnos.filter(t => new Date(t.fecha).getFullYear() === esteAnio);
-            
-            const suma = (arr, metodo = null) => {
-                const filtrados = metodo ? arr.filter(t => t.metodo === metodo) : arr;
-                return filtrados.reduce((sum, t) => sum + (t.precio || 0), 0);
-            };
-            
-            document.getElementById('stats-hoy').textContent = `$${suma(turnosHoy).toFixed(2)}`;
-            document.getElementById('stats-semana').textContent = `$${suma(turnosSemana).toFixed(2)}`;
-            document.getElementById('stats-mes').textContent = `$${suma(turnosMes).toFixed(2)}`;
-            document.getElementById('stats-anio').textContent = `$${suma(turnosAnio).toFixed(2)}`;
-            
-            document.getElementById('stats-efect').textContent = `$${suma(turnos, 'efect').toFixed(2)}`;
-            document.getElementById('stats-mp').textContent = `$${suma(turnos, 'mp').toFixed(2)}`;
-            document.getElementById('stats-nx').textContent = `$${suma(turnos, 'nx').toFixed(2)}`;
-            document.getElementById('stats-total').textContent = `$${suma(turnos).toFixed(2)}`;
-        }
-
-        // ====================
-        // 11. EXPORTACION
-        // ====================
-        function imprimirDia() {
-            const contenido = document.getElementById('lista-dia').innerHTML;
-            const ventana = window.open('', '_blank');
-            ventana.document.write(`
-                <html><head><title>Turnos del Día - Patipet</title>
-                <style>
-                    body { font-family: Arial, sans-serif; padding: 20px; }
-                    .turno-item { border:1px solid #ccc; padding:15px; margin-bottom:10px; border-radius:8px; }
-                    h1 { color: #5d4037; }
-                </style>
-                </head>
-                <body>
-                <h1>Patipet</h1>
-                <h2>Turnos del Día</h2>
-                ${contenido}
-                <p style="margin-top:30px; text-align:center; color:#666;">Impreso el ${new Date().toLocaleDateString('es-ES')}</p>
-                </body></html>
-            `);
-            ventana.document.close();
-            ventana.print();
-        }
-        
-        function exportarHistorial() {
-            const datos = {
-                clientes: clientes,
-                turnos: turnos,
-                exportado: new Date().toISOString(),
-                sistema: "Patipet"
-            };
-            
-            const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `backup-patipet-${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            
-            alert('✅ Historial exportado exitosamente!');
-        }
-
-        // ====================
-        // 12. UTILIDADES
-        // ====================
-        function formatearFecha(fecha) {
-            const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            return fecha.toLocaleDateString('es-ES', opciones);
-        }
-        
-        function formatearFechaCorta(fecha) {
-            const opciones = { weekday: 'short', month: 'short', day: 'numeric' };
-            return fecha.toLocaleDateString('es-ES', opciones);
-        }
-
-        // ====================
-        // 13. PWA - INSTALAR APP
-        // ====================
-        function mostrarBannerInstalacion() {
-            const installBanner = document.getElementById('installBanner');
-            installBanner.classList.add('show');
-            
-            // Ocultar después de 30 segundos
-            setTimeout(() => {
-                installBanner.classList.remove('show');
-            }, 30000);
-        }
-        
-        function ocultarBannerInstalacion() {
-            document.getElementById('installBanner').classList.remove('show');
-        }
-        
-        // ====================
-        // 14. SERVICE WORKER Y OFFLINE
-        // ====================
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker registrado con éxito:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Error al registrar Service Worker:', error);
-                    });
-            });
-        }
-        
-        // Detectar cambios en la conexión
-        function actualizarEstadoConexion() {
-            const offlineIndicator = document.getElementById('offlineIndicator');
-            if (!navigator.onLine) {
-                offlineIndicator.classList.add('show');
-                console.log('Modo offline activado');
-            } else {
-                offlineIndicator.classList.remove('show');
-                console.log('Modo online activado');
-            }
-        }
-
-// ====================
-// SISTEMA DE BACKUP MEJORADO
-// ====================
-const BACKUP_KEY = 'patipet_turnos_backup_v1';
-
-function exportarBackup() {
-    try {
+    // ====================
+    // 10. SISTEMA DE BACKUP
+    // ====================
+    function exportarBackup() {
+      try {
         const datos = {
-            turnos: turnos,
-            clientes: clientes,
-            exportado: new Date().toISOString(),
-            version: 'patipet_v1'
+          turnos: turnos,
+          clientes: clientes,
+          exportado: new Date().toISOString(),
+          version: 'patipet_v1'
         };
         
         const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
@@ -1842,664 +1360,149 @@ function exportarBackup() {
         URL.revokeObjectURL(url);
         
         alert('✅ Backup exportado correctamente');
-    } catch (error) {
+      } catch (error) {
         alert('❌ Error al exportar: ' + error.message);
+      }
     }
-}
 
-function importarBackup(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
+    function importarBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
         try {
-            const datos = JSON.parse(e.target.result);
-            
-            if (!datos.turnos || !Array.isArray(datos.turnos)) {
-                throw new Error('Archivo de backup inválido');
-            }
-            
-            if (!confirm(`¿Restaurar backup con ${datos.turnos.length} turnos y ${datos.clientes ? datos.clientes.length : 0} clientes?\n\nSe reemplazarán los datos actuales.`)) {
-                return;
-            }
-            
-            // Guardar backup actual por si acaso
-            const backupActual = {
-                turnos: JSON.parse(localStorage.getItem('turnos') || '[]'),
-                clientes: JSON.parse(localStorage.getItem('clientes') || '[]'),
-                fecha: new Date().toISOString()
-            };
-            localStorage.setItem('backup_antes_de_importar', JSON.stringify(backupActual));
-            
-            // Restaurar datos
-            turnos = datos.turnos;
-            clientes = datos.clientes || [];
-            
-            // Asegurar que cada turno tenga ID
-            turnos.forEach((t, index) => {
-                if (!t.id) t.id = Date.now() + index;
-                if (!t.fechaCreacion) t.fechaCreacion = new Date().toISOString();
-            });
-            
-            guardarDatos();
-            
-            // Recargar vistas
-            cargarMes();
-            cargarSemana();
-            cargarDia();
-            cargarListaClientes();
-            cargarClientes();
-            calcularEstadisticas();
-            
-            alert(`✅ Backup restaurado\nTurnos: ${turnos.length}\nClientes: ${clientes.length}`);
-            
-        } catch (error) {
-            alert('❌ Error al importar: ' + error.message);
-        }
-    };
-    reader.readAsText(file);
-}
-
-// Backup automático cada 7 días
-setInterval(() => {
-    const ultimoBackup = localStorage.getItem('ultimo_backup_auto');
-    const hoy = new Date().toISOString().split('T')[0];
-    
-    if (!ultimoBackup || ultimoBackup !== hoy) {
-        const datos = {
+          const datos = JSON.parse(e.target.result);
+          
+          if (!datos.turnos || !Array.isArray(datos.turnos)) {
+            throw new Error('Archivo de backup inválido');
+          }
+          
+          if (!confirm(`¿Restaurar backup con ${datos.turnos.length} turnos y ${datos.clientes ? datos.clientes.length : 0} clientes?\n\nSe reemplazarán los datos actuales.`)) {
+            return;
+          }
+          
+          // Guardar backup actual por si acaso
+          const backupActual = {
             turnos: JSON.parse(localStorage.getItem('turnos') || '[]'),
             clientes: JSON.parse(localStorage.getItem('clientes') || '[]'),
-            fecha: hoy
-        };
-        localStorage.setItem('backup_auto_' + hoy, JSON.stringify(datos));
-        localStorage.setItem('ultimo_backup_auto', hoy);
-        console.log('Backup automático realizado:', hoy);
-    }
-}, 24 * 60 * 60 * 1000);
-
-        // ====================
-        // 15. INICIALIZACION
-        // ====================
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarListaClientes();
-            cargarMes();
-            cargarSemana();
-            cargarDia();
-            calcularEstadisticas();
-            
-            // Establecer valores por defecto en formularios
-            const ahora = new Date();
-            const fechaHoy = ahora.toISOString().split('T')[0];
-            const fechaInput = document.getElementById('fecha');
-            fechaInput.value = fechaHoy;
-            fechaInput.min = fechaHoy;
-            
-            document.getElementById('fecha-dia').value = fechaHoy;
-            
-            // Configurar detección de cambio en fecha
-            fechaInput.addEventListener('change', function() {
-                const hora = document.getElementById('hora').value;
-                const fechaHora = this.value + 'T' + hora;
-                
-                if (!validarFechaFutura(fechaHora)) {
-                    mostrarErrorFecha();
-                    this.focus();
-                } else {
-                    ocultarErrorFecha();
-                }
-            });
-            
-            // Eventos para PWA
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                mostrarBannerInstalacion();
-            });
-            
-            document.getElementById('installBtn').addEventListener('click', () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('Usuario instaló la app');
-                        }
-                        deferredPrompt = null;
-                        ocultarBannerInstalacion();
-                    });
-                }
-            });
-            
-            document.getElementById('closeInstall').addEventListener('click', ocultarBannerInstalacion);
-            
-            // Detectar estado de conexión
-            window.addEventListener('online', actualizarEstadoConexion);
-            window.addEventListener('offline', actualizarEstadoConexion);
-            actualizarEstadoConexion();
-        });
-        // ====================
- 
-    </script>
-    <!-- FullCalendar JS -->
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.min.js'></script>
-
-<script>
-// SISTEMA DE GUARDADO ROBUSTO
-let calendar = null;
-const STORAGE_KEY = 'patipet_calendar_events_v2';
-
-// 1. FUNCIÓN DE GUARDADO MEJORADA
-function guardarEventoSeguro(evento) {
-    try {
-        // Validar evento
-        if (!evento || !evento.start || !evento.title) {
-            console.error('Evento inválido');
-            return false;
-        }
-        
-        // Asegurar formato de fechas
-        if (typeof evento.start === 'string') {
-            evento.start = new Date(evento.start).toISOString();
-        } else if (evento.start instanceof Date) {
-            evento.start = evento.start.toISOString();
-        }
-        
-        if (evento.end) {
-            if (typeof evento.end === 'string') {
-                evento.end = new Date(evento.end).toISOString();
-            } else if (evento.end instanceof Date) {
-                evento.end = evento.end.toISOString();
-            }
-        }
-        
-        // Asegurar ID único
-        if (!evento.id) {
-            evento.id = 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        }
-        
-        // Asegurar extendedProps para datos extra
-        if (!evento.extendedProps) {
-            evento.extendedProps = {};
-        }
-        
-        // Guardar costo siempre
-        if (evento.costo && !evento.extendedProps.costo) {
-            evento.extendedProps.costo = evento.costo;
-        }
-        
-        if (evento.cliente && !evento.extendedProps.cliente) {
-            evento.extendedProps.cliente = evento.cliente;
-        }
-        
-        if (evento.telefono && !evento.extendedProps.telefono) {
-            evento.extendedProps.telefono = evento.telefono;
-        }
-        
-        // Obtener eventos existentes
-        let eventos = cargarEventosSeguro();
-        
-        // Evitar duplicados
-        const index = eventos.findIndex(e => e.id === evento.id);
-        if (index > -1) {
-            eventos[index] = evento; // Actualizar
-        } else {
-            eventos.push(evento); // Agregar nuevo
-        }
-        
-        // Guardar con verificación
-        const jsonString = JSON.stringify(eventos);
-        localStorage.setItem(STORAGE_KEY, jsonString);
-        
-        // Verificar guardado
-        const verificado = localStorage.getItem(STORAGE_KEY);
-        if (verificado === jsonString) {
-            console.log('Evento guardado correctamente:', evento.id);
-            return true;
-        } else {
-            console.error('Error en verificación de guardado');
-            // Backup en sessionStorage
-            sessionStorage.setItem('backup_' + evento.id, jsonString);
-            return false;
-        }
-        
-    } catch (error) {
-        console.error('Error al guardar evento:', error);
-        // Último recurso: guardar en array de respaldo
-        try {
-            const backupEvents = JSON.parse(sessionStorage.getItem('backup_events') || '[]');
-            backupEvents.push(evento);
-            sessionStorage.setItem('backup_events', JSON.stringify(backupEvents));
-        } catch (e) {}
-        return false;
-    }
-}
-
-// 2. FUNCIÓN DE CARGA MEJORADA
-function cargarEventosSeguro() {
-    try {
-        const datos = localStorage.getItem(STORAGE_KEY);
-        
-        if (!datos || datos === 'null' || datos === 'undefined') {
-            return [];
-        }
-        
-        let eventos = JSON.parse(datos);
-        
-        if (!Array.isArray(eventos)) {
-            console.warn('Datos corruptos, reiniciando array');
-            return [];
-        }
-        
-        // Filtrar y limpiar eventos
-        eventos = eventos.filter(evento => {
-            return evento && 
-                   evento.id && 
-                   evento.title && 
-                   evento.start &&
-                   !isNaN(new Date(evento.start).getTime());
-        });
-        
-        // Limpiar eventos duplicados
-        const uniqueIds = new Set();
-        eventos = eventos.filter(evento => {
-            if (uniqueIds.has(evento.id)) {
-                return false;
-            }
-            uniqueIds.add(evento.id);
-            return true;
-        });
-        
-        console.log('Eventos cargados:', eventos.length);
-        return eventos;
-        
-    } catch (error) {
-        console.error('Error al cargar eventos:', error);
-        return [];
-    }
-}
-
-// 3. INICIALIZAR CALENDARIO
-function inicializarCalendario() {
-    const calendarEl = document.getElementById('calendar');
-    
-    if (!calendarEl) {
-        console.error('Elemento del calendario no encontrado');
-        return;
-    }
-    
-    // Cargar eventos
-    const eventos = cargarEventosSeguro();
-    
-    // Configurar calendario
-    calendar = new FullCalendar.Calendar(calendarEl, {
-        locale: 'es',
-        timeZone: 'local',
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        buttonText: {
-            today: 'Hoy',
-            month: 'Mes',
-            week: 'Semana',
-            day: 'Día'
-        },
-        firstDay: 1, // Lunes
-        navLinks: true,
-        editable: true,
-        selectable: true,
-        selectMirror: true,
-        dayMaxEvents: true,
-        weekends: true,
-        
-        // FECHAS CORREGIDAS
-        validRange: {
-            start: '2024-01-01',
-            end: '2027-12-31'
-        },
-        
-        // PERMITIR MODIFICAR HOY
-        selectAllow: function(selectInfo) {
-            const ahora = new Date();
-            ahora.setHours(0, 0, 0, 0);
-            return selectInfo.start >= ahora;
-        },
-        
-        eventAllow: function(dropInfo, draggedEvent) {
-            const ahora = new Date();
-            ahora.setHours(0, 0, 0, 0);
-            return dropInfo.start >= ahora;
-        },
-        
-        // MOSTRAR HORAS CORRECTAMENTE
-        displayEventTime: true,
-        eventTimeFormat: {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
-        },
-        
-        // EVENTOS
-        events: eventos,
-        
-        // MANEJAR SELECCIÓN DE FECHA
-        select: function(info) {
-            const ahora = new Date();
-            if (info.start < ahora) {
-                alert('No se pueden crear turnos en fechas pasadas');
-                calendar.unselect();
-                return;
-            }
-            
-            // Tu código para abrir formulario de nuevo turno
-            abrirFormularioNuevoTurno(info.start, info.end);
-            calendar.unselect();
-        },
-        
-        // MANEJAR CLIC EN EVENTO
-        eventClick: function(info) {
-            const evento = info.event;
-            const inicioEvento = new Date(evento.start);
-            const ahora = new Date();
-            
-            // PERMITIR MODIFICAR HOY
-            if (inicioEvento < ahora) {
-                const diferenciaHoras = (ahora - inicioEvento) / (1000 * 60 * 60);
-                if (diferenciaHoras > 1) {
-                    alert('Este turno ya pasó. Solo se pueden modificar turnos de hoy.');
-                    return;
-                }
-            }
-            
-            // Abrir editor de evento
-            abrirEditorEvento(evento);
-        },
-        
-        // GUARDAR CAMBIOS EN EVENTO
-        eventDrop: function(info) {
-            const evento = info.event;
-            guardarEventoSeguro({
-                id: evento.id,
-                title: evento.title,
-                start: evento.start,
-                end: evento.end,
-                extendedProps: evento.extendedProps
-            });
-        },
-        
-        eventResize: function(info) {
-            const evento = info.event;
-            guardarEventoSeguro({
-                id: evento.id,
-                title: evento.title,
-                start: evento.start,
-                end: evento.end,
-                extendedProps: evento.extendedProps
-            });
-        },
-        
-        // RENDERIZAR EVENTOS CON DATOS EXTRA
-        eventContent: function(arg) {
-            const evento = arg.event;
-            const props = evento.extendedProps;
-            
-            const contenedor = document.createElement('div');
-            contenedor.style.padding = '2px';
-            contenedor.style.fontSize = '12px';
-            
-            // Mostrar título principal
-            const titulo = document.createElement('div');
-            titulo.textContent = evento.title;
-            titulo.style.fontWeight = 'bold';
-            titulo.style.marginBottom = '2px';
-            contenedor.appendChild(titulo);
-            
-            // Mostrar costo si existe
-            if (props && props.costo) {
-                const costo = document.createElement('div');
-                costo.textContent = '$' + props.costo;
-                costo.style.color = '#4caf50';
-                costo.style.fontSize = '11px';
-                contenedor.appendChild(costo);
-            }
-            
-            // Mostrar teléfono si existe
-            if (props && props.telefono) {
-                const telefono = document.createElement('div');
-                telefono.textContent = '📱 ' + props.telefono;
-                telefono.style.fontSize = '10px';
-                telefono.style.color = '#666';
-                contenedor.appendChild(telefono);
-            }
-            
-            return { domNodes: [contenedor] };
-        }
-    });
-    
-    calendar.render();
-    console.log('Calendario inicializado');
-}
-
-// 4. FUNCIONES AUXILIARES (AJUSTA A TU CÓDIGO)
-function abrirFormularioNuevoTurno(start, end) {
-    // Tu código existente para abrir formulario
-    console.log('Nuevo turno para:', start, end);
-    // Mostrar tu modal/formulario aquí
-}
-
-function abrirEditorEvento(evento) {
-    // Tu código existente para editar evento
-    console.log('Editando evento:', evento.id);
-    // Mostrar editor con datos del evento
-    const props = evento.extendedProps;
-    
-    // Ejemplo de cómo llenar formulario
-    if (props) {
-        console.log('Cliente:', props.cliente);
-        console.log('Costo:', props.costo);
-        console.log('Teléfono:', props.telefono);
-    }
-}
-
-// 5. INICIALIZAR AL CARGAR
-document.addEventListener('DOMContentLoaded', function() {
-    inicializarCalendario();
-    
-    // Registrar Service Worker
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js')
-            .then(registration => {
-                console.log('Service Worker registrado');
-                
-                // Registrar sync para background
-                if ('sync' in registration) {
-                    registration.sync.register('sync-turnos');
-                }
-            })
-            .catch(error => {
-                console.log('Error registrando Service Worker:', error);
-            });
-    }
-    
-    // Backup automático cada 24 horas
-    setInterval(() => {
-        const eventos = cargarEventosSeguro();
-        const backupKey = 'backup_' + new Date().toISOString().split('T')[0];
-        localStorage.setItem(backupKey, JSON.stringify(eventos));
-        console.log('Backup automático realizado');
-    }, 24 * 60 * 60 * 1000);
-});
-
-// 6. FUNCIÓN DE EXPORTACIÓN PARA BACKUP
-function exportarBackup() {
-    try {
-        const eventos = cargarEventosSeguro();
-        const datos = JSON.stringify(eventos, null, 2);
-        const blob = new Blob([datos], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        
-        // Crear enlace de descarga
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'backup-turnos-' + new Date().toISOString().split('T')[0] + '.json';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        alert('Backup exportado correctamente');
-    } catch (error) {
-        alert('Error al exportar backup: ' + error.message);
-    }
-}
-
-// 7. FUNCIÓN DE IMPORTACIÓN
-function importarBackup(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const eventos = JSON.parse(e.target.result);
-            
-            if (!Array.isArray(eventos)) {
-                throw new Error('Formato inválido');
-            }
-            
-            // Validar cada evento
-            const eventosValidados = eventos.filter(evt => 
-                evt && evt.id && evt.title && evt.start
-            );
-            
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(eventosValidados));
-            
-            // Recargar calendario
-            if (calendar) {
-                calendar.removeAllEvents();
-                calendar.addEventSource(eventosValidados);
-            }
-            
-            alert('Backup importado: ' + eventosValidados.length + ' turnos restaurados');
+            fecha: new Date().toISOString()
+          };
+          localStorage.setItem('backup_antes_de_importar', JSON.stringify(backupActual));
+          
+          // Restaurar datos
+          turnos = datos.turnos;
+          clientes = datos.clientes || [];
+          guardarDatos();
+          
+          // Recargar vistas
+          cargarMes();
+          cargarSemana();
+          cargarDia();
+          cargarListaClientes();
+          cargarClientes();
+          calcularEstadisticas();
+          
+          alert(`✅ Backup restaurado\nTurnos: ${turnos.length}\nClientes: ${clientes.length}`);
+          
         } catch (error) {
-            alert('Error al importar: ' + error.message);
+          alert('❌ Error al importar: ' + error.message);
         }
-    };
-    reader.readAsText(file);
-}
+      };
+      reader.readAsText(file);
+    }
 
-// ====================
-// ACTUALIZAR CÓDIGO DE LA APP (NO DATOS)
-// ====================
-function recargarAppConCacheClean() {
-    if (!confirm('¿Actualizar código de la aplicación?\n\nEsto cargará la última versión del código.\n✅ TUS DATOS NO SE PERDERÁN.\n🔄 La página se recargará.')) {
+    // ====================
+    // 11. ACTUALIZAR CÓDIGO
+    // ====================
+    function recargarAppConCacheClean() {
+      if (!confirm('¿Actualizar la aplicación?\n\nEsto cargará la última versión del código.\n✅ Tus datos NO se perderán.\n🔄 La página se recargará.')) {
         return;
-    }
-    
-    // 1. Guardar estado actual para restaurar después
-    const scrollPos = window.scrollY;
-    const panelActivo = document.querySelector('.panel.active').id;
-    
-    // 2. Forzar actualización de Service Worker
-    if ('serviceWorker' in navigator) {
+      }
+      
+      // Forzar actualización de Service Worker
+      if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(registrations => {
-            registrations.forEach(registration => {
-                registration.update();
-            });
+          registrations.forEach(registration => {
+            registration.update();
+          });
         });
-    }
-    
-    // 3. Recargar con parámetro para evitar caché
-    setTimeout(() => {
-        // Método 1: reload con true (fuerza caché del servidor)
+      }
+      
+      // Recargar sin caché
+      setTimeout(() => {
         window.location.reload(true);
-        
-        // Método alternativo: añadir timestamp a la URL
-        // const url = new URL(window.location);
-        // url.searchParams.set('_t', Date.now());
-        // window.location.href = url.toString();
-    }, 500);
-    
-    // 4. Opcional: restaurar estado después de recargar
-    window.onload = function() {
-        window.scrollTo(0, scrollPos);
-        const botonPanel = document.querySelector(`[onclick*="${panelActivo}"]`);
-        if (botonPanel) botonPanel.click();
-    };
-}
-
-// También podemos añadir un atajo de teclado (Ctrl+Shift+R)
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.shiftKey && e.key === 'R') {
-        e.preventDefault();
-        recargarAppConCacheClean();
+      }, 500);
+      
+      alert('🔄 Recargando aplicación... Tus datos están seguros.');
     }
-});
-  
-// 8. FUNCIÓN ORIGINAL DE BOTONES FLOTANTES (LA MANTENEMOS POR SI ACASO)
-function agregarBotonesBackup() {
-    const botonExportar = document.createElement('button');
-    botonExportar.textContent = '📥 Exportar Backup';
-    botonExportar.onclick = exportarBackup;
-    botonExportar.style.cssText = `
-        position: fixed;
-        bottom: 80px;
-        right: 10px;
-        z-index: 1000;
-        padding: 10px;
-        background: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 14px;
-    `;
-    
-    const botonImportar = document.createElement('input');
-    botonImportar.type = 'file';
-    botonImportar.accept = '.json';
-    botonImportar.onchange = importarBackup;
-    botonImportar.style.cssText = `
-        position: fixed;
-        bottom: 40px;
-        right: 10px;
-        z-index: 1000;
-        padding: 10px;
-        background: #2196f3;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 14px;
-        width: 140px;
-    `;
-    
-    const labelImportar = document.createElement('label');
-    labelImportar.textContent = '📤 Importar Backup';
-    labelImportar.htmlFor = botonImportar.id;
-    labelImportar.style.cssText = `
-        position: fixed;
-        bottom: 40px;
-        right: 10px;
-        z-index: 1000;
-        padding: 10px;
-        background: #2196f3;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 14px;
-        cursor: pointer;
-        width: 140px;
-        text-align: center;
+
+    // ====================
+    // 12. PWA Y SERVICE WORKER
+    // ====================
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registrado:', registration.scope);
+          })
+          .catch(error => {
+            console.log('Error al registrar Service Worker:', error);
+          });
+      });
+    }
+
+    // ====================
+    // 13. INICIALIZACIÓN
+    // ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Configurar fecha mínima en formulario
+      const hoy = new Date().toISOString().split('T')[0];
+      document.getElementById('fecha').min = hoy;
+      document.getElementById('fecha-dia').value = hoy;
+      
+      // Cargar datos iniciales
+      cargarListaClientes();
+      cargarMes();
+      cargarSemana();
+      cargarDia();
+      calcularEstadisticas();
+      
+      // Configurar PWA
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        setTimeout(() => {
+          document.getElementById('installBanner').classList.add('show');
+        }, 2000);
+      });
+      
+      document.getElementById('installBtn').addEventListener('click', () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('Usuario instaló la app');
+            }
+            deferredPrompt = null;
+            document.getElementById('installBanner').classList.remove('show');
+          });
+        }
+      });
+      
+      document.getElementById('closeInstall').addEventListener('click', () => {
+        document.getElementById('installBanner').classList.remove('show');
+      });
+      
+      // Detectar estado de conexión
+      window.addEventListener('online', () => {
+        document.getElementById('offlineIndicator').classList.remove('show');
+      });
+      
+      window.addEventListener('offline', () => {
+        document.getElementById('offlineIndicator').classList.add('show');
+      });
+    });
   </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
